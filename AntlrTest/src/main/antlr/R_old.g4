@@ -187,9 +187,9 @@ fragment LETTER  : [a-zA-Z] ;
 
 USER_OP :   '%' .*? '%' ;
 
-COMMENT :   '#' .*? '\r'? '\n' -> skip ;
+COMMENT :   '#' .*? '\r'? '\n' -> type(NL) ;
 
 // Match both UNIX and Windows newlines
-NL      :   '\r'? '\n' -> skip;
+NL      :   '\r'? '\n' ;
 
 WS      :   [ \t\u000C]+ -> skip ;
