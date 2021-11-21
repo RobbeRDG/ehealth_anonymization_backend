@@ -26,66 +26,31 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/**
-derived from http://svn.r-project.org/R/trunk/src/main/gram.y
-http://cran.r-project.org/doc/manuals/R-lang.html#Parser
 
-I'm no R genius but this seems to work.
-
-Requires RFilter.g4 to strip away NL that are really whitespace,
-not end-of-command. See TestR.java
-
-Usage:
-
-$ antlr4 R.g4 RFilter.g4
-$ javac *.java
-$ java TestR sample.R
-... prints parse tree ...
-*/
 grammar R;
 
-prog:   (   expr (';'|NL)*
-        |   NL
-        )*
-        EOF
+//This is the root node of the tree
+prog
+    :   (expr (';'|NL)*| NL )* EOF
     ;
 
-/*
-expr_or_assign
-    :   expr ('<-'|'='|'<<-') expr_or_assign
-    |   expr
-    ;
-*/
-
-expr:   expr '[[' sublist ']' ']'  // '[[' follows R's yacc grammar
-    |   expr '[' sublist ']'
-    |   expr ('::'|':::') expr
-    |   expr ('$'|'@') expr
-    |   <assoc=right> expr '^' expr
+//The main building blocks of the tree
+expr
+    :   expr ('*'|'/') expr
+    |   expr ('+'|'-') expr
     |   ('-'|'+') expr
     |   expr ':' expr
-    |   expr USER_OP expr // anything wrapped in %: '%' .* '%'
-    |   expr ('*'|'/') expr
-    |   expr ('+'|'-') expr
     |   expr ('>'|'>='|'<'|'<='|'=='|'!=') expr
     |   '!' expr
     |   expr ('&'|'&&') expr
     |   expr ('|'|'||') expr
-    |   '~' expr
-    |   expr '~' expr
-    |   expr ('<-'|'<<-'|'='|'->'|'->>'|':=') expr
-    |   'function' '(' formlist? ')' expr // define function
-    |   expr '(' sublist ')'              // call function
-    |   '{' exprlist '}' // compound statement
     |   'if' '(' expr ')' expr
     |   'if' '(' expr ')' expr 'else' expr
     |   'for' '(' ID 'in' expr ')' expr
     |   'while' '(' expr ')' expr
     |   'repeat' expr
-    |   '?' expr // get help on expr, usually string or ID
     |   'next'
     |   'break'
-    |   '(' expr ')'
     |   ID
     |   STRING
     |   HEX
@@ -98,23 +63,32 @@ expr:   expr '[[' sublist ']' ']'  // '[[' follows R's yacc grammar
     |   'NaN'
     |   'TRUE'
     |   'FALSE'
+    |   expr ('<-') expr
+    |   ID '(' subList ')'
+    |   ID '<-' 'function' '(' functionDeclarationArguments? ')' '{' exprList '}'
     ;
 
-exprlist
-    :   expr ((';'|NL) expr?)*
-    |
+
+//Function declaration
+functionDeclarationArguments
+    : functionDeclarationArgument (',' functionDeclarationArgument)*
     ;
-
-formlist : form (',' form)* ;
-
-form:   ID
+functionDeclarationArgument
+    :   ID
     |   ID '=' expr
     |   '...'
     |   '.'
     ;
 
-sublist : sub (',' sub)* ;
+//Needed for function body in curly braces
+exprList
+    :   expr ((';'|NL) (expr)?)*
+    ;
 
+//Pass the function arguments
+subList
+    : sub (',' sub)*
+    ;
 sub :   expr
     |   ID '='
     |   ID '=' expr
@@ -127,21 +101,40 @@ sub :   expr
     |
     ;
 
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Lexor
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 HEX :   '0' ('x'|'X') HEXDIGIT+ [Ll]? ;
 
 INT :   DIGIT+ [Ll]? ;
 
 fragment
-HEXDIGIT : ('0'..'9'|'a'..'f'|'A'..'F') ;
+HEXDIGIT
+    : ('0'..'9'|'a'..'f'|'A'..'F')
+    ;
 
-FLOAT:  DIGIT+ '.' DIGIT* EXP? [Ll]?
+FLOAT
+    :  DIGIT+ '.' DIGIT* EXP? [Ll]?
     |   DIGIT+ EXP? [Ll]?
     |   '.' DIGIT+ EXP? [Ll]?
     ;
+
 fragment
-DIGIT:  '0'..'9' ;
+DIGIT
+    :  '0'..'9'
+    ;
+
 fragment
-EXP :   ('E' | 'e') ('+' | '-')? INT ;
+EXP
+    :   ('E' | 'e') ('+' | '-')? INT
+    ;
 
 COMPLEX
     :   INT 'i'
@@ -155,7 +148,8 @@ STRING
     ;
 
 fragment
-ESC :   '\\' [abtnfrv"'\\]
+ESC
+    :   '\\' [abtnfrv"'\\]
     |   UNICODE_ESCAPE
     |   HEX_ESCAPE
     |   OCTAL_ESCAPE
@@ -179,17 +173,29 @@ HEX_ESCAPE
     :   '\\' HEXDIGIT HEXDIGIT?
     ;
 
-ID  :   '.' (LETTER|'_'|'.') (LETTER|DIGIT|'_'|'.')*
+ID
+    :   '.' (LETTER|'_'|'.') (LETTER|DIGIT|'_'|'.')*
     |   LETTER (LETTER|DIGIT|'_'|'.')*
     ;
 
-fragment LETTER  : [a-zA-Z] ;
+fragment
+LETTER
+    :   [a-zA-Z]
+    ;
 
-USER_OP :   '%' .*? '%' ;
+USER_OP
+    :   '%' .*? '%'
+    ;
 
-COMMENT :   '#' .*? '\r'? '\n' -> skip ;
+COMMENT
+    :   '#' .*? '\r'? '\n' -> skip
+    ;
 
 // Match both UNIX and Windows newlines
-NL      :   '\r'? '\n' -> skip;
+NL
+    :   '\r'? '\n' -> skip
+    ;
 
-WS      :   [ \t\u000C]+ -> skip ;
+WS
+    :   [ \t\u000C]+ -> skip
+    ;
