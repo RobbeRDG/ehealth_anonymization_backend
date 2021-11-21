@@ -20,7 +20,7 @@ public class Main {
 
          */
         String testInput =  "data <- sql(\"Select * from test\") \n" +
-                "count <- nrows(data) \n" +
+                "count <- nrows.tst(data) \n" +
                 "output <- c(count) \n";
 
         //Parse the input into a program tree
