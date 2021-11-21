@@ -1,7 +1,7 @@
 HELP.md
 .gradle
-build/
-!build/generated-src/antlr/*
+build/*
+!build/generated-src/antlr/**/*
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
