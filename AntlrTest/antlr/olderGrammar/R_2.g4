@@ -36,35 +36,36 @@ prog
 
 //The main building blocks of the tree
 expr
-    :   assignedValue=ID ( '<-' ) expr                                                  #assignmentExpr
-    |   ID '(' subList ')'                                                              #funcCallExpr
-    |   ID '<-' 'function' '(' functionDeclarationArguments? ')' '{' exprList '}'       #funcDeclExpr
-    |   expr ('*'|'/') expr                                                             #mathOpExpr
-    |   expr ('+'|'-') expr                                                             #mathOpExpr
-    |   ('-'|'+') expr                                                                  #unariMathOpExpr
-    |   expr ('>'|'>='|'<'|'<='|'=='|'!=') expr                                         #compExpr
-    |   '!' expr                                                                        #negExpr
-    |   expr ('&'|'&&') expr                                                            #logicExpr
-    |   expr ('|'|'||') expr                                                            #logicExpr
-    |   'if' '(' expr ')' expr                                                          #ifExpr
-    |   'if' '(' expr ')' expr 'else' expr                                              #ifElseExpr
-    |   'for' '(' ID 'in' expr ')' expr                                                 #forLoopExpr
-    |   'while' '(' expr ')' expr                                                       #whileLoopExpr
-    |   'repeat' expr                                                                   #repeatLoopExpr
-    |   'next'                                                                          #flowExpr
-    |   'break'                                                                         #flowExpr
-    |   ID                                                                              #idAtomExpr
-    |   STRING                                                                          #stringAtomExpr
-    |   HEX                                                                             #hexAtomExpr
-    |   INT                                                                             #intAtomExpr
-    |   FLOAT                                                                           #floatAtomExpr
-    |   COMPLEX                                                                         #complAtomExpr
-    |   'NULL'                                                                          #nullAtomExpr
-    |   'NA'                                                                            #naAtomExpr
-    |   'Inf'                                                                           #infAtomExpr
-    |   'NaN'                                                                           #nanAtomExpr
-    |   'TRUE'                                                                          #trueAtomExpr
-    |   'FALSE'                                                                         #falseAtomExpr
+    :   expr ('*'|'/') expr
+    |   expr ('+'|'-') expr
+    |   ('-'|'+') expr
+    |   expr ':' expr
+    |   expr ('>'|'>='|'<'|'<='|'=='|'!=') expr
+    |   '!' expr
+    |   expr ('&'|'&&') expr
+    |   expr ('|'|'||') expr
+    |   'if' '(' expr ')' expr
+    |   'if' '(' expr ')' expr 'else' expr
+    |   'for' '(' ID 'in' expr ')' expr
+    |   'while' '(' expr ')' expr
+    |   'repeat' expr
+    |   'next'
+    |   'break'
+    |   ID
+    |   STRING
+    |   HEX
+    |   INT
+    |   FLOAT
+    |   COMPLEX
+    |   'NULL'
+    |   'NA'
+    |   'Inf'
+    |   'NaN'
+    |   'TRUE'
+    |   'FALSE'
+    |   expr ('<-') expr
+    |   ID '(' subList ')'
+    |   ID '<-' 'function' '(' functionDeclarationArguments? ')' '{' exprList '}'
     ;
 
 
