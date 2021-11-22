@@ -2,21 +2,25 @@ import Antlr.*;
 import Antlr.impl.RScriptBaseVisitorImpl;
 import SupportedFunctions.FunctionFingerPrintScanner;
 import SupportedFunctions.SupportedFunctionFingerPrint;
+import TreeExpressionNodes.Expression;
 import TreeExpressionNodes.ProgramExpression;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import enums.FunctionId;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 
 
 public class Main {
     private static ProgramExpression test;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws JsonProcessingException {
         //Set the input string
         String testInput = "data <- input(\"Select * from test\") \n" +
                 "count <- nrow(data) \n" +
@@ -51,9 +55,14 @@ public class Main {
 
         //Export the tree and anonimisation information
         //TODO
+        ArrayList<Expression> expressionList = programExpression.getChildExpressions();
+        String test = new ObjectMapper().writeValueAsString(programExpression);
 
 
-        System.out.println(programExpression);
+        ProgramExpression deserialised = new ObjectMapper().readValue(test, ProgramExpression.class);
+
+
+        System.out.println(test);
 
     }
 }

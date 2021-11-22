@@ -1,16 +1,19 @@
 package TreeExpressionNodes;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
 
-@Getter
-@Setter
-@NoArgsConstructor
+
+@JsonTypeName("functionArgumentsExpression")
 public class FunctionArgumentsExpression extends Expression {
     private ArrayList<AtomExpression> functionArguments;
+
+    public FunctionArgumentsExpression() {
+    }
 
     public FunctionArgumentsExpression(ArrayList<AtomExpression> functionArguments) {
         this.functionArguments = functionArguments;
@@ -22,5 +25,9 @@ public class FunctionArgumentsExpression extends Expression {
 
     public ArrayList<AtomExpression> getFunctionArguments() {
         return functionArguments;
+    }
+
+    public void setFunctionArguments(ArrayList<AtomExpression> functionArguments) {
+        this.functionArguments = functionArguments;
     }
 }
