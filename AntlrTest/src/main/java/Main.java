@@ -1,39 +1,59 @@
 import Antlr.*;
+import Antlr.impl.RScriptBaseVisitorImpl;
+import SupportedFunctions.FunctionFingerPrintScanner;
+import SupportedFunctions.SupportedFunctionFingerPrint;
+import TreeExpressionNodes.ProgramExpression;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import enums.FunctionId;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
+
+import java.util.Collections;
 
 
 public class Main {
+    private static ProgramExpression test;
+
     public static void main(String[] args) {
         //Set the input string
-        /*
-        String inpupt = "for(year in c(2010,2011,2012)) {\n" +
-                "print(\"The year is\", year)\n" +
-                "}\n" +
-                "print(\"test\")\n" +
-                "test <- ncount(1234)\n" +
-                "test <- 1234\n" +
-                "ncount(1234)\n" +
-                "function_name <- function(arg_1, arg_2) {\n" +
-                "print(test)\n" +
-                "}";
-
-         */
-        String testInput =  "data <- sql(\"Select * from test\") \n" +
-                "count <- nrows.tst(data) \n" +
-                "output <- c(count) \n";
+        String testInput = "data <- input(\"Select * from test\") \n" +
+                "count <- nrow(data) \n" +
+                "output(count)\n";
 
         //Parse the input into a program tree
-        RLexer lexer = new RLexer(CharStreams.fromString(testInput));
+        RScriptLexer lexer = new RScriptLexer(CharStreams.fromString(testInput));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        RParser parser = new RParser(tokens);
-        RParser.ProgContext programTree = parser.prog();
+        RScriptParser parser = new RScriptParser(tokens);
+        RScriptParser.ProgContext programTree = parser.prog();
+
+        //Set the supported list of functions
+        FunctionFingerPrintScanner.addSupportedFunctionFingerPrint("nrow", new SupportedFunctionFingerPrint(FunctionId.nrow, "nrow", true, Collections.singletonList(1)));
+
 
         //Visit the program tree
-        //RVisitor visitor = new RVisitorImpl();
-        //visitor.visitProg(programTree);
+        RScriptBaseVisitorImpl visitor = new RScriptBaseVisitorImpl();
+        ProgramExpression programExpression = new ProgramExpression();
+        try {
+            programExpression = (ProgramExpression) visitor.visitProg(programTree);
+        } catch (ParseCancellationException e) {
+            e.printStackTrace();
+        }
 
-        System.out.println();
+
+        //Test if the output variables are defined in the script
+        //TODO
+
+        //Generate the anonimisation information for each function
+        //TODO
+
+
+        //Export the tree and anonimisation information
+        //TODO
+
+
+        System.out.println(programExpression);
 
     }
 }

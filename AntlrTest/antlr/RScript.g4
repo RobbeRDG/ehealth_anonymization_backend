@@ -27,7 +27,7 @@
 */
 
 
-grammar R;
+grammar RScript;
 
 //This is the root node of the tree
 prog
@@ -36,8 +36,10 @@ prog
 
 //The main building blocks of the tree
 expr
-    :   assignedValue=ID ( '<-' ) expr                                                  #assignmentExpr
-    |   ID '(' subList ')'                                                              #funcCallExpr
+    :   ID ( '<-' ) expr                                                                #assignmentExpr
+    |   ID '(' functionCallArguments ')'                                                #funcCallExpr
+    |   'output' '(' functionCallArguments ')'                                          #dataOutputExpr
+    |   'input' '(' expr ')'                                                            #dataInputExpr
     |   ID '<-' 'function' '(' functionDeclarationArguments? ')' '{' exprList '}'       #funcDeclExpr
     |   expr ('*'|'/') expr                                                             #mathOpExpr
     |   expr ('+'|'-') expr                                                             #mathOpExpr
@@ -63,8 +65,8 @@ expr
     |   'NA'                                                                            #naAtomExpr
     |   'Inf'                                                                           #infAtomExpr
     |   'NaN'                                                                           #nanAtomExpr
-    |   'TRUE'                                                                          #trueAtomExpr
-    |   'FALSE'                                                                         #falseAtomExpr
+    |   'TRUE'                                                                          #boolAtomExpr
+    |   'FALSE'                                                                         #boolAtomExpr
     ;
 
 
@@ -85,19 +87,8 @@ exprList
     ;
 
 //Pass the function arguments
-subList
-    : sub (',' sub)*
-    ;
-sub :   expr
-    |   ID '='
-    |   ID '=' expr
-    |   STRING '='
-    |   STRING '=' expr
-    |   'NULL' '='
-    |   'NULL' '=' expr
-    |   '...'
-    |   '.'
-    |
+functionCallArguments
+    : expr (',' expr)*
     ;
 
 
@@ -188,6 +179,10 @@ USER_OP
 
 COMMENT
     :   '#' .*? '\r'? '\n' -> skip
+    ;
+
+IMPORT
+    :   'import' .*? '\r'? '\n' -> skip
     ;
 
 // Match both UNIX and Windows newlines
