@@ -22,7 +22,8 @@ public class Main {
 
     public static void main(String[] args) throws JsonProcessingException {
         //Set the input string
-        String testInput = "data <- input(\"Select * from test\") \n" +
+        String testInput = "import(test) \n" +
+                "data <- input(\"Select * from test\") \n" +
                 "count <- nrow(data) \n" +
                 "output(count)\n";
 
