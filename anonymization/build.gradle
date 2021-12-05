@@ -1,9 +1,7 @@
 plugins {
-	id 'org.springframework.boot' version '2.6.0'
+	id 'org.springframework.boot' version '2.6.1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id 'antlr'
-	id 'idea'
 }
 
 group = 'be.kul'
@@ -22,31 +20,12 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	antlr "org.antlr:antlr4:4.9.3"
-	implementation "org.antlr:antlr4-runtime:4.9.3"
+	implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.6.1.Final'
+	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.27'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-generateGrammarSource {
-	maxHeapSize = "128m"
-	arguments += ['-visitor', '-no-listener']
-}
-compileJava.dependsOn generateGrammarSource
-sourceSets {
-	generated {
-		java.srcDir 'generated-src/antlr/main/'
-	}
-}
-compileJava.source sourceSets.generated.java, sourceSets.main.java
-clean{
-	delete "generated-src"
-}
-idea {
-	module {
-		sourceDirs += file("generated-src/antlr/main/")
-	}
 }
 
 test {

@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: SCRIPT-EXECUTION-SERVICE
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL81Dialect
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5432/synthea_50000p
+    username: script_executer
+    password: VgYVeu7uY6niCEgM
+
+  spring.jpa.hibernate.ddl-auto=update
+  spring.jpa.show-sql=true
+  spring.jpa.properties.hibernate.format_sql=true

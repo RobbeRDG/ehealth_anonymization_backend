@@ -1,0 +1,30 @@
+package be.kul.scriptExecutor.Service;
+
+import be.kul.scriptExecutor.Repository.MedicalDataRepository;
+import be.kul.scriptExecutor.Utils.Components.ScriptExecution.ScriptExecutionController;
+import be.kul.scriptExecutor.Utils.Components.ScriptExecution.ScriptSummary.ScriptSummary;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+
+@Slf4j
+@Service
+public class ScriptExecutorService {
+    @Autowired
+    private ScriptExecutionController scriptExecutionController;
+
+    @Autowired
+    private MedicalDataRepository medicalDataRepository;
+
+    public ResponseEntity<String> executeSummary(ScriptSummary scriptSummary) {
+        return scriptExecutionController.executeSummary(scriptSummary);
+    }
+
+    public List<HashMap<String,String>> getDataSet(String query) {
+        return medicalDataRepository.executeQueryResponse(query);
+    }
+}
