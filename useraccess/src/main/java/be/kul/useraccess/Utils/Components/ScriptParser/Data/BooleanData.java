@@ -7,4 +7,12 @@ public class BooleanData extends Data {
         super();
         this.booleanValue = booleanValue;
     }
+
+    public boolean isBooleanValue() {
+        return booleanValue;
+    }
+
+    public void setBooleanValue(boolean booleanValue) {
+        this.booleanValue = booleanValue;
+    }
 }

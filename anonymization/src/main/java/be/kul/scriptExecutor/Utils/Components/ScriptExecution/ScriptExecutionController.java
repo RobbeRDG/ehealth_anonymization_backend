@@ -19,7 +19,6 @@ import java.util.List;
 public class ScriptExecutionController {
     @Autowired
     private ScriptExecutorService scriptExecutorService;
-
     @Autowired
     private AnonymizationController anonymizationController;
 
@@ -32,6 +31,9 @@ public class ScriptExecutionController {
 
         //Execute the tree using the visitor
         treeVisitor.visit(programTree);
+
+        //Get the variables
+        treeVisitor.getVariables();
 
         return null;
     }

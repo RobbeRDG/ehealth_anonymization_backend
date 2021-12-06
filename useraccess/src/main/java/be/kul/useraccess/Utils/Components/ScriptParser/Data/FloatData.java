@@ -9,4 +9,12 @@ public class FloatData extends Data {
         super();
         this.floatValue = floatValue;
     }
+
+    public float getFloatValue() {
+        return floatValue;
+    }
+
+    public void setFloatValue(float floatValue) {
+        this.floatValue = floatValue;
+    }
 }

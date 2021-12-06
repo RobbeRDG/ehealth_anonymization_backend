@@ -10,4 +10,12 @@ public class VariableData extends Data {
         super();
         this.variableName = variableName;
     }
+
+    public String getVariableName() {
+        return variableName;
+    }
+
+    public void setVariableName(String variableName) {
+        this.variableName = variableName;
+    }
 }

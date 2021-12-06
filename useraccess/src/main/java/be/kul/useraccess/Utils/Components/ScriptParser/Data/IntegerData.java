@@ -10,4 +10,12 @@ public class IntegerData extends Data {
         super();
         this.integerValue = integerValue;
     }
+
+    public int getIntegerValue() {
+        return integerValue;
+    }
+
+    public void setIntegerValue(int integerValue) {
+        this.integerValue = integerValue;
+    }
 }

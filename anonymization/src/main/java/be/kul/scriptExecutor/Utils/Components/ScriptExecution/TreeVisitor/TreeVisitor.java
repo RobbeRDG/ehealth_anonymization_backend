@@ -6,6 +6,7 @@ import be.kul.scriptExecutor.Utils.Components.ScriptExecution.TreeExpressionNode
 import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Variable.VariableContainer;
 import be.kul.scriptExecutor.Utils.Components.ScriptExecution.enums.AtomExpressionType;
 import be.kul.scriptExecutor.Utils.enums.FunctionId;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,10 +16,14 @@ public class TreeVisitor extends AbstractTreeVisitor<Expression> {
     private ScriptExecutionController scriptExecutionController;
     private HashMap<String, VariableContainer> variables;
 
+
     public TreeVisitor(ScriptExecutionController scriptExecutionController) {
         super();
-        this.scriptExecutionController = scriptExecutionController;
         variables = new HashMap<>();
+    }
+
+    public HashMap<String, VariableContainer> getVariables() {
+        return variables;
     }
 
     @Override
@@ -50,7 +55,8 @@ public class TreeVisitor extends AbstractTreeVisitor<Expression> {
         //Put the new variable in the map
         variables.put(variableName, variableContainer);
 
-        return expression;
+        //Return atom expression instead
+        return new AtomExpression(AtomExpressionType.ID, variableName, new VariableData(variableName));
     }
 
     @Override
@@ -178,7 +184,6 @@ public class TreeVisitor extends AbstractTreeVisitor<Expression> {
         } else {
             return (StringData) assignedData;
         }
-
          */
     }
 }

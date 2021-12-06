@@ -13,4 +13,12 @@ public class DataSetData extends Data {
         super();
         this.dataSetValue = dataSetValue;
     }
+
+    public List<Map<String, Object>> getDataSetValue() {
+        return dataSetValue;
+    }
+
+    public void setDataSetValue(List<Map<String, Object>> dataSetValue) {
+        this.dataSetValue = dataSetValue;
+    }
 }
