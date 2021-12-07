@@ -19,6 +19,7 @@ public class TreeVisitor extends AbstractTreeVisitor<Expression> {
 
     public TreeVisitor(ScriptExecutionController scriptExecutionController) {
         super();
+        this.scriptExecutionController = scriptExecutionController;
         variables = new HashMap<>();
     }
 
@@ -29,8 +30,8 @@ public class TreeVisitor extends AbstractTreeVisitor<Expression> {
     @Override
     public Expression visit(AssignmentExpression expression) {
         //Get the name of the variable the data is going to be assigned to
-        StringData stringData = (StringData) expression.getVariable().getDataOfAtom();
-        String variableName = stringData.getStringValue();
+        VariableData variableData = (VariableData) expression.getVariable().getDataOfAtom();
+        String variableName = variableData.getVariableName();
 
         //Create a new Variable container object
         VariableContainer variableContainer = new VariableContainer(variableName);

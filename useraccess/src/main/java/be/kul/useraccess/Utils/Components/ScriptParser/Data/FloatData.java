@@ -1,7 +1,8 @@
 package be.kul.useraccess.Utils.Components.ScriptParser.Data;
 
-import be.kul.useraccess.Utils.Components.ScriptParser.Antlr.RScriptParser;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
+@JsonTypeName("floatData")
 public class FloatData extends Data {
     private float floatValue;
 

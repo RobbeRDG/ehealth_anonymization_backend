@@ -2,23 +2,23 @@ package be.kul.useraccess.Utils.Components.ScriptParser.Data;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @JsonTypeName("dataSetData")
 public class DataSetData extends Data {
-    private List<Map<String, Object>> dataSetValue;
+    private List<HashMap<String, String>> unanonymizedDataSet;
 
-    public DataSetData(List<Map<String, Object>> dataSetValue) {
+    public DataSetData(List<HashMap<String,String>> unanonymizedDataSet) {
         super();
-        this.dataSetValue = dataSetValue;
+        this.unanonymizedDataSet = unanonymizedDataSet;
     }
 
-    public List<Map<String, Object>> getDataSetValue() {
-        return dataSetValue;
+    public List<HashMap<String, String>> getUnanonymizedDataSet() {
+        return unanonymizedDataSet;
     }
 
-    public void setDataSetValue(List<Map<String, Object>> dataSetValue) {
-        this.dataSetValue = dataSetValue;
+    public void setUnanonymizedDataSet(List<HashMap<String, String>> unanonymizedDataSet) {
+        this.unanonymizedDataSet = unanonymizedDataSet;
     }
 }
