@@ -16,9 +16,13 @@ configurations {
 
 repositories {
 	mavenCentral()
+	flatDir {
+		dirs 'libs'
+	}
 }
 
 dependencies {
+	implementation name: 'libarx-3.9.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.6.1.Final'
 	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.27'

@@ -2,15 +2,19 @@ package be.kul.useraccess.Utils.Components.ScriptParser.Antlr.impl;
 
 import be.kul.useraccess.Utils.Components.ScriptParser.Antlr.RScriptBaseVisitor;
 import be.kul.useraccess.Utils.Components.ScriptParser.Antlr.RScriptParser;
-import be.kul.useraccess.Utils.Components.ScriptParser.Data.*;
+import be.kul.useraccess.Utils.Components.ScriptParser.Data.AnonymizationInformation.AnonymizationInformation;
+import be.kul.useraccess.Utils.Components.ScriptParser.Data.DataClasses.*;
+import be.kul.useraccess.Utils.Components.ScriptParser.Data.DataContainer.DataContainer;
 import be.kul.useraccess.Utils.Components.ScriptParser.Exceptions.NotSupportedFunctionException;
 import be.kul.useraccess.Utils.Components.ScriptParser.SupportedFunctions.FunctionFingerPrint;
 import be.kul.useraccess.Utils.Components.ScriptParser.SupportedFunctions.FunctionFingerPrintScanner;
 import be.kul.useraccess.Utils.Components.ScriptParser.TreeExpressionNodes.*;
 import be.kul.useraccess.Utils.Components.ScriptParser.enums.FunctionId;
 import be.kul.useraccess.Utils.Components.ScriptParser.enums.AtomExpressionType;
+import be.kul.useraccess.Utils.Enums.AnonymizationStatus;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -77,8 +81,17 @@ public class RScriptBaseVisitorImpl extends RScriptBaseVisitor<Expression> {
     public Expression visitAssignmentExpr(RScriptParser.AssignmentExprContext ctx) {
         //Get the variable expression
         String variableName = ctx.getChild(0).getText();
+
+        //Get the variable data
         VariableData variableData = new VariableData(variableName);
-        AtomExpression variable = new AtomExpression(AtomExpressionType.ID, variableName, variableData);
+
+        //Set the data container
+        DataContainer dataContainer = new DataContainer();
+        dataContainer.setAssignedData(variableData);
+        dataContainer.setAnonymizationInformation(new AnonymizationInformation(AnonymizationStatus.UNANONYMIZED,null));
+
+        //Build the atom expression
+        AtomExpression variable = new AtomExpression(AtomExpressionType.ID, dataContainer);
 
         //Store the variable in the used variables
         variableNames.add(variableName);
@@ -142,7 +155,8 @@ public class RScriptBaseVisitorImpl extends RScriptBaseVisitor<Expression> {
         );
 
         //Add the query to the input dataset queries
-        inputDataQueries.add(argumentExpression.getDataStringOfAtom());
+        StringData sqlQuery = (StringData) argumentExpression.getDataOfAtom().getAssignedData();
+        inputDataQueries.add(sqlQuery.getStringValue());
 
         return new DataInputExpression(argumentExpression);
     }
@@ -160,7 +174,11 @@ public class RScriptBaseVisitorImpl extends RScriptBaseVisitor<Expression> {
             if (atomExpression.getAtomExpressionType() != AtomExpressionType.ID) throw new ParseCancellationException(
                     "The output of a script can only contain variables"
             );
-            outputVariableNames.add(atomExpression.getDataStringOfAtom());
+
+            //Get the variable data
+            VariableData variableData = (VariableData) atomExpression.getDataOfAtom().getAssignedData();
+
+            outputVariableNames.add(variableData.getVariableName());
         }
 
         return new DataOutputExpression(argumentExpressions);
@@ -172,6 +190,7 @@ public class RScriptBaseVisitorImpl extends RScriptBaseVisitor<Expression> {
 
         //Get the expression from each child
         for (ParseTree child : ctx.children) {
+            if (child instanceof TerminalNode) continue;
             try {
                 argumentExpressions.add((AtomExpression) visit(child));
             } catch (ClassCastException e) {
@@ -188,13 +207,18 @@ public class RScriptBaseVisitorImpl extends RScriptBaseVisitor<Expression> {
         //Get the variable name
         String variableName = ctx.getText();
 
-        //Create a variable data object
+        //Get the variable data
         VariableData variableData = new VariableData(variableName);
+
+        //Set the data container
+        DataContainer dataContainer = new DataContainer();
+        dataContainer.setAssignedData(variableData);
+        dataContainer.setAnonymizationInformation(new AnonymizationInformation(AnonymizationStatus.UNANONYMIZED,null));
 
         //Store the variable in the used variables
         variableNames.add(variableName);
 
-        return new AtomExpression(AtomExpressionType.ID, variableName, variableData);
+        return new AtomExpression(AtomExpressionType.ID, dataContainer);
     }
 
 
@@ -205,7 +229,12 @@ public class RScriptBaseVisitorImpl extends RScriptBaseVisitor<Expression> {
         //Create a new float data object
         FloatData floatData = new FloatData(Float.parseFloat(floatString));
 
-        return new AtomExpression(AtomExpressionType.FLOAT, floatString, floatData);
+        //Set the data container
+        DataContainer dataContainer = new DataContainer();
+        dataContainer.setAssignedData(floatData);
+        dataContainer.setAnonymizationInformation(new AnonymizationInformation(AnonymizationStatus.UNANONYMIZED,null));
+
+        return new AtomExpression(AtomExpressionType.FLOAT, dataContainer);
     }
 
     @Override
@@ -215,7 +244,12 @@ public class RScriptBaseVisitorImpl extends RScriptBaseVisitor<Expression> {
         //Create a new string data object
         StringData stringData = new StringData(string);
 
-        return new AtomExpression(AtomExpressionType.STRING, string, stringData);
+        //Set the data container
+        DataContainer dataContainer = new DataContainer();
+        dataContainer.setAssignedData(stringData);
+        dataContainer.setAnonymizationInformation(new AnonymizationInformation(AnonymizationStatus.UNANONYMIZED,null));
+
+        return new AtomExpression(AtomExpressionType.STRING, dataContainer);
     }
 
     @Override
@@ -225,7 +259,12 @@ public class RScriptBaseVisitorImpl extends RScriptBaseVisitor<Expression> {
         //Create a new Integer data object
         IntegerData integerData = new IntegerData(Integer.parseInt(integerString));
 
-        return new AtomExpression(AtomExpressionType.INT, integerString, integerData);
+        //Set the data container
+        DataContainer dataContainer = new DataContainer();
+        dataContainer.setAssignedData(integerData);
+        dataContainer.setAnonymizationInformation(new AnonymizationInformation(AnonymizationStatus.UNANONYMIZED,null));
+
+        return new AtomExpression(AtomExpressionType.INT, dataContainer);
     }
 
     @Override
@@ -235,7 +274,12 @@ public class RScriptBaseVisitorImpl extends RScriptBaseVisitor<Expression> {
         //Create a boolean data object
         BooleanData booleanData = new BooleanData(Boolean.parseBoolean(booleanString));
 
-        return new AtomExpression(AtomExpressionType.BOOLEAN, booleanString, booleanData);
+        //Set the data container
+        DataContainer dataContainer = new DataContainer();
+        dataContainer.setAssignedData(booleanData);
+        dataContainer.setAnonymizationInformation(new AnonymizationInformation(AnonymizationStatus.UNANONYMIZED,null));
+
+        return new AtomExpression(AtomExpressionType.BOOLEAN, dataContainer);
     }
 
 

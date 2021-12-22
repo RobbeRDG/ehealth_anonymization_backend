@@ -2,12 +2,14 @@ package be.kul.scriptExecutor.Utils.Components.ScriptExecution;
 
 
 import be.kul.scriptExecutor.Service.ScriptExecutorService;
-import be.kul.scriptExecutor.Utils.Components.Anonymization.AnonymizationController;
-import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Data.Data;
-import be.kul.scriptExecutor.Utils.Components.ScriptExecution.ScriptSummary.ScriptSummary;
-import be.kul.scriptExecutor.Utils.Components.ScriptExecution.TreeExpressionNodes.ProgramExpression;
-import be.kul.scriptExecutor.Utils.Components.ScriptExecution.TreeVisitor.TreeVisitor;
-import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Variable.VariableContainer;
+import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Anonymization.AnonymizationController;
+import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Data.DataClasses.AnonymizedDataSetData;
+import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Data.DataClasses.Data;
+import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Data.DataClasses.DataSetData;
+import be.kul.scriptExecutor.Utils.Components.ScriptExecution.TreeStructure.ScriptSummary.ScriptSummary;
+import be.kul.scriptExecutor.Utils.Components.ScriptExecution.TreeStructure.TreeExpressionNodes.ProgramExpression;
+import be.kul.scriptExecutor.Utils.Components.ScriptExecution.TreeStructure.TreeVisitor.TreeVisitor;
+import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Data.DataContainer.DataContainer;
 import be.kul.scriptExecutor.Utils.enums.FunctionId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +27,7 @@ public class ScriptExecutionController {
     @Autowired
     private AnonymizationController anonymizationController;
 
-    public ResponseEntity<HashMap<String, VariableContainer>> executeSummary(ScriptSummary scriptSummary) {
+    public ResponseEntity<HashMap<String, DataContainer>> executeSummary(ScriptSummary scriptSummary) {
         //Extract the program tree from the summary
         ProgramExpression programTree = scriptSummary.getProgramTree();
 
@@ -36,16 +38,13 @@ public class ScriptExecutionController {
         treeVisitor.visit(programTree);
 
         //Get the variables
-        HashMap<String, VariableContainer> variables = treeVisitor.getVariables();
+        HashMap<String, DataContainer> variables = treeVisitor.getVariables();
 
         //Get the output variable names
         Set<String> outputVariableNames = scriptSummary.getOutputVariableNames();
 
         //Generate the output
-        HashMap<String, VariableContainer> outputVariables = new HashMap<>();
-        for (String outputVariableName : outputVariableNames) {
-            outputVariables.put(outputVariableName, variables.get(outputVariableName));
-        }
+        HashMap<String, DataContainer> outputVariables = generateOutputVariables(outputVariableNames, variables);
 
         return new ResponseEntity<>(
                 outputVariables,
@@ -53,11 +52,30 @@ public class ScriptExecutionController {
         );
     }
 
-    public List<HashMap<String,String>> getDataSet(String query) {
+    private HashMap<String, DataContainer> generateOutputVariables(Set<String> outputVariableNames, HashMap<String, DataContainer> variables) {
+        HashMap<String, DataContainer> outputVariables = new HashMap<>();
+        for (String outputVariableName : outputVariableNames) {
+            //Get the variable data
+            DataContainer dataContainer = variables.get(outputVariableName);
+
+            //If the output variable is a dataset it needs to be anonymised
+            if (dataContainer.getAssignedData() instanceof DataSetData) {
+                //Anonymise the dataset
+                DataSetData dataSetData = (DataSetData) dataContainer.getAssignedData();
+                dataContainer = anonymizationController.anonymizeDataSet(dataContainer);
+            }
+
+            outputVariables.put(outputVariableName, dataContainer);
+        }
+
+        return outputVariables;
+    }
+
+    public DataContainer getDataSet(String query) {
         return scriptExecutorService.getDataSet(query);
     }
 
-    public Data executeAnonymizedFunction(FunctionId functionId, List<Data> arguments) {
+    public DataContainer executeAnonymizedFunction(FunctionId functionId, List<DataContainer> arguments) {
         return anonymizationController.executeAnonymizedFunction(functionId, arguments);
     }
 }

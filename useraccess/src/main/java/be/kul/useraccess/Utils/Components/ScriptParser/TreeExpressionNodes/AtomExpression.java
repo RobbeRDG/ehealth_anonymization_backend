@@ -1,6 +1,7 @@
 package be.kul.useraccess.Utils.Components.ScriptParser.TreeExpressionNodes;
 
-import be.kul.useraccess.Utils.Components.ScriptParser.Data.Data;
+import be.kul.useraccess.Utils.Components.ScriptParser.Data.DataClasses.Data;
+import be.kul.useraccess.Utils.Components.ScriptParser.Data.DataContainer.DataContainer;
 import be.kul.useraccess.Utils.Components.ScriptParser.enums.AtomExpressionType;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
@@ -8,12 +9,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeName("atomExpression")
 public class AtomExpression extends Expression {
     private AtomExpressionType atomExpressionType;
-    private String dataStringOfAtom;
-    private Data dataOfAtom;
+    private DataContainer dataOfAtom;
 
-    public AtomExpression(AtomExpressionType atomExpressionType, String dataStringOfAtom, Data dataOfAtom) {
+    public AtomExpression(AtomExpressionType atomExpressionType, DataContainer dataOfAtom) {
         this.atomExpressionType = atomExpressionType;
-        this.dataStringOfAtom = dataStringOfAtom;
         this.dataOfAtom = dataOfAtom;
     }
 
@@ -28,15 +27,7 @@ public class AtomExpression extends Expression {
         this.atomExpressionType = atomExpressionType;
     }
 
-    public String getDataStringOfAtom() {
-        return dataStringOfAtom;
-    }
-
-    public void setDataStringOfAtom(String dataStringOfAtom) {
-        this.dataStringOfAtom = dataStringOfAtom;
-    }
-
-    public Data getDataOfAtom() {
+    public DataContainer getDataOfAtom() {
         return dataOfAtom;
     }
 }
