@@ -1,4 +1,4 @@
-package be.kul.scriptExecutor.Utils.Components.ScriptExecution.Anonymization.DataSetAnonymization.HelperObjects;
+package be.kul.scriptExecutor.Utils.Components.ScriptExecution.Anonymization.DataSetAnonymization.Anonymizer;
 
 import org.deidentifier.arx.*;
 import org.deidentifier.arx.Data.DefaultData;
@@ -15,7 +15,9 @@ public class ArxAnonymizer {
 
         //Set the anonymization configuration
         configuration.addPrivacyModel(new KAnonymity(3));
-        configuration.addPrivacyModel(new DistinctLDiversity("cause_concept_id", 2));
+        if (!data.getDefinition().getSensitiveAttributes().isEmpty()) {
+            configuration.addPrivacyModel(new DistinctLDiversity("cause_concept_id", 2));
+        }
 
         //Set the information loss metric
         configuration.setQualityModel(Metric.createEntropyMetric());

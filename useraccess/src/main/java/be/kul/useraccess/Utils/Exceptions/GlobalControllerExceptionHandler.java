@@ -1,7 +1,6 @@
 package be.kul.useraccess.Utils.Exceptions;
 
-import be.kul.useraccess.Utils.Components.ScriptParser.Exceptions.ScriptParsingException;
-import be.kul.useraccess.Utils.Exceptions.ErrorMessage;
+import be.kul.useraccess.Utils.Exceptions.ExceptionClasses.ScriptParsingException;
 import be.kul.useraccess.Utils.Exceptions.ExceptionClasses.ScriptFileToStringConversionException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;

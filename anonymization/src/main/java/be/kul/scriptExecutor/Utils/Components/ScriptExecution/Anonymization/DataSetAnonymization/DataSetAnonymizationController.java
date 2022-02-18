@@ -1,11 +1,8 @@
 package be.kul.scriptExecutor.Utils.Components.ScriptExecution.Anonymization.DataSetAnonymization;
 
-import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Anonymization.DataSetAnonymization.HelperObjects.AnonymizedDataSetGenerator;
-import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Anonymization.DataSetAnonymization.HelperObjects.ArxAnonymizer;
-import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Anonymization.DataSetAnonymization.HelperObjects.ArxDataSetGenerator;
-import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Anonymization.DataSetAnonymization.HelperObjects.DataSetAnonymizationResult;
-import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Data.DataClasses.AnonymizedDataSetData;
-import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Data.DataClasses.DataSetData;
+import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Anonymization.DataSetAnonymization.DataSetGenerators.ArxToDataContainerGenerator;
+import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Anonymization.DataSetAnonymization.Anonymizer.ArxAnonymizer;
+import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Anonymization.DataSetAnonymization.DataSetGenerators.DataContainerToArxGenerator;
 import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Data.DataContainer.DataContainer;
 import be.kul.scriptExecutor.Utils.Exceptions.DataSetAnonymizationException;
 import org.deidentifier.arx.ARXPopulationModel;
@@ -20,7 +17,7 @@ public class DataSetAnonymizationController {
 
     public DataContainer anonymizeDataSet(DataContainer dataSetContainer) {
         //Prepare the dataset for arx
-        DefaultData arxData = ArxDataSetGenerator.generateArxDataSet(dataSetContainer);
+        DefaultData arxData = DataContainerToArxGenerator.generateArxDataSet(dataSetContainer);
 
         //Run the anonymization
         DataHandle dataHandle;
@@ -31,7 +28,7 @@ public class DataSetAnonymizationController {
         }
 
         //Convert the arx result into an anonymized dataset object
-        DataContainer anonymizedDataSetContainer = AnonymizedDataSetGenerator.generateDataSetData(dataHandle, population);
+        DataContainer anonymizedDataSetContainer = ArxToDataContainerGenerator.generateDataSetData(dataHandle, population);
 
         return anonymizedDataSetContainer;
     }

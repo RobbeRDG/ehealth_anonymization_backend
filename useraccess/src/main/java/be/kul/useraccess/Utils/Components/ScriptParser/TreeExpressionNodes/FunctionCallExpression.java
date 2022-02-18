@@ -1,6 +1,6 @@
 package be.kul.useraccess.Utils.Components.ScriptParser.TreeExpressionNodes;
 
-import be.kul.useraccess.Utils.Components.ScriptParser.enums.FunctionId;
+import be.kul.useraccess.Utils.Enums.FunctionId;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.ArrayList;

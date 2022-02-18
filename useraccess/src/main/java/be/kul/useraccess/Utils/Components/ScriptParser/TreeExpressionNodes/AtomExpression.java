@@ -1,8 +1,7 @@
 package be.kul.useraccess.Utils.Components.ScriptParser.TreeExpressionNodes;
 
-import be.kul.useraccess.Utils.Components.ScriptParser.Data.DataClasses.Data;
 import be.kul.useraccess.Utils.Components.ScriptParser.Data.DataContainer.DataContainer;
-import be.kul.useraccess.Utils.Components.ScriptParser.enums.AtomExpressionType;
+import be.kul.useraccess.Utils.Enums.AtomExpressionType;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 

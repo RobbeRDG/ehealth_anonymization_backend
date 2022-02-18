@@ -1,4 +1,4 @@
-package be.kul.scriptExecutor.Utils.Components.ScriptExecution.Anonymization.DataSetAnonymization.HelperObjects;
+package be.kul.scriptExecutor.Utils.Components.ScriptExecution.Anonymization.DataSetAnonymization.DataSetGenerators;
 
 import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Data.AnonymizationInformation.AnonymizationInformation;
 import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Data.AnonymizationInformation.AnonymizationParameters.DataSetAnonymizationParameters;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class AnonymizedDataSetGenerator {
+public class ArxToDataContainerGenerator {
     public static DataContainer generateDataSetData(DataHandle dataHandle, ARXPopulationModel population) {
         //Convert arx dataset to hashmap
         List<HashMap<String,String>> dataSetMap = generateDataSetMap(dataHandle);

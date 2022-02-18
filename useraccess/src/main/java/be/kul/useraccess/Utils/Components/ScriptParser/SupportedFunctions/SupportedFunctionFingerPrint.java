@@ -1,6 +1,6 @@
 package be.kul.useraccess.Utils.Components.ScriptParser.SupportedFunctions;
 
-import be.kul.useraccess.Utils.Components.ScriptParser.enums.FunctionId;
+import be.kul.useraccess.Utils.Enums.FunctionId;
 
 import java.util.List;
 

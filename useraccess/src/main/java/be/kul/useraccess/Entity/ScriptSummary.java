@@ -1,7 +1,6 @@
 package be.kul.useraccess.Entity;
 
 import be.kul.useraccess.Utils.Components.ScriptParser.TreeExpressionNodes.ProgramExpression;
-import be.kul.useraccess.Utils.Components.ScriptParser.enums.FunctionId;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

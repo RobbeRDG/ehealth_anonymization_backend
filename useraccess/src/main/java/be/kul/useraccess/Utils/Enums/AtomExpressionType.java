@@ -1,4 +1,4 @@
-package be.kul.useraccess.Utils.Components.ScriptParser.enums;
+package be.kul.useraccess.Utils.Enums;
 
 public enum AtomExpressionType {
     ID,

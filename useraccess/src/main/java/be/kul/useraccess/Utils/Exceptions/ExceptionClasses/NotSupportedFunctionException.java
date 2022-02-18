@@ -1,4 +1,4 @@
-package be.kul.useraccess.Utils.Components.ScriptParser.Exceptions;
+package be.kul.useraccess.Utils.Exceptions.ExceptionClasses;
 
 public class NotSupportedFunctionException extends RuntimeException {
     public NotSupportedFunctionException(String message) {

@@ -1,7 +1,7 @@
 package be.kul.useraccess.Utils.Components.ScriptParser.SupportedFunctions;
 
-import be.kul.useraccess.Utils.Components.ScriptParser.enums.FunctionId;
-import be.kul.useraccess.Utils.Components.ScriptParser.Exceptions.NotSupportedFunctionException;
+import be.kul.useraccess.Utils.Enums.FunctionId;
+import be.kul.useraccess.Utils.Exceptions.ExceptionClasses.NotSupportedFunctionException;
 
 import java.util.HashMap;
 

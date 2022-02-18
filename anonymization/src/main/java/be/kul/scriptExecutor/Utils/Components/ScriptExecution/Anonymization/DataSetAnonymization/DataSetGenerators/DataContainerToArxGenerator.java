@@ -1,4 +1,5 @@
-package be.kul.scriptExecutor.Utils.Components.ScriptExecution.Anonymization.DataSetAnonymization.HelperObjects;
+package be.kul.scriptExecutor.Utils.Components.ScriptExecution.Anonymization.DataSetAnonymization.DataSetGenerators;
+import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Anonymization.DataSetAnonymization.HelperObjects.ArxColumnInformation;
 import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Data.DataClasses.DataSetData;
 import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Data.DataContainer.DataContainer;
 import be.kul.scriptExecutor.Utils.Exceptions.DataSetAnonymizationException;
@@ -17,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class ArxDataSetGenerator {
+public class DataContainerToArxGenerator {
     private static final HashMap<String, ArxColumnInformation> columnInformation = initialiseColumnInformation();
 
     public static Data.DefaultData generateArxDataSet(DataContainer dataSetContainer) {
