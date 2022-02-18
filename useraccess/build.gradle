@@ -22,11 +22,13 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	antlr "org.antlr:antlr4:4.9.3"
 	implementation "org.antlr:antlr4-runtime:4.9.3"
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 }
 
 generateGrammarSource {

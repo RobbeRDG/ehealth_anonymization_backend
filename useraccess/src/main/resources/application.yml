@@ -1,0 +1,18 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: USER-ACCESS-SERVICE
+  rabbitmq:
+    host: localhost
+    username: service
+    password: 5AJtgi9jb%y87TKr
+    port: 5672
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      username: useraccess
+      password: "*5F&FsCDT7#%Uxxx"
+      database: user_access

@@ -1,8 +1,11 @@
 package be.kul.useraccess.Service;
 
+import be.kul.useraccess.Entity.ScriptExecutionResult;
+import be.kul.useraccess.Service.SubService.DataHandlerController;
 import be.kul.useraccess.Entity.ScriptSummary;
-import be.kul.useraccess.Utils.Components.ScriptParser.ScriptParserController;
+import be.kul.useraccess.Service.SubService.ScriptParserController;
 import be.kul.useraccess.Utils.Exceptions.ExceptionClasses.ScriptFileToStringConversionException;
+import be.kul.useraccess.controller.AMQP.AmqpProducerController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +22,16 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class UserAccessService {
     @Autowired
-    ScriptParserController scriptParserController;
+    private ScriptParserController scriptParserController;
 
-    public ResponseEntity<String> uploadScript(MultipartFile scriptFile) throws ScriptFileToStringConversionException, JsonProcessingException {
+    @Autowired
+    private AmqpProducerController amqpProducerController;
+
+    @Autowired
+    private DataHandlerController dataHandlerController;
+
+    public ResponseEntity<Long> handleScriptUpload(MultipartFile scriptFile) throws ScriptFileToStringConversionException, JsonProcessingException {
+        //Read the file input string
         String scriptString = "";
         try {
             scriptString = new String(scriptFile.getBytes(), StandardCharsets.UTF_8);
@@ -31,13 +41,22 @@ public class UserAccessService {
         }
 
         //Send the script string to the parser
-        ScriptSummary scriptSummary = scriptParserController.generateAnonymizationSummary(scriptString);
+        ScriptSummary scriptSummary = scriptParserController.generateScriptSummary(scriptString);
+
+        //Save the generated script summary to the database
+        //scriptSummary = dataHandlerController.saveInputScriptSummary(scriptSummary);
+
+        //Send the summary to the anonymization service
+        amqpProducerController.sendAnonymizationRequest(scriptSummary);
+
+        //Return the script id to the user
+        long scriptId = scriptSummary.getScriptId();
+        return new ResponseEntity<Long>(scriptId, HttpStatus.OK);
+    }
 
 
-        String anonymizationSummaryString = new ObjectMapper().writeValueAsString(scriptSummary);
-
-
-        return new ResponseEntity<String>(anonymizationSummaryString, HttpStatus.OK);
-
+    public void handleScriptExecutionResult(ScriptExecutionResult scriptExecutionResult) {
+        //Save the script execution result to the database
+        dataHandlerController.saveScriptExecutionResult(scriptExecutionResult);
     }
 }
