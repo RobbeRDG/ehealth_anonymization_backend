@@ -23,7 +23,7 @@ public class AmqpProducerController {
         //Send the script summary to the anonymization service
         template.convertAndSend(
                 RabbitMQConfig.BRIDGE_EXCHANGE,
-                RabbitMQConfig.ANONYMIZATION_RESULT_QUEUE,
+                RabbitMQConfig.ANONYMIZATION_RESULT_BINDING_KEY,
                 scriptExecutionResultString
         );
     }

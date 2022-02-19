@@ -30,4 +30,8 @@ public class DataHandlerController {
         return scriptSummaryRepository.save(scriptSummary);
     }
 
+    public ScriptAnonymizationResult getScriptAnonymizationResult(long scriptId) {
+        return scriptExecutionResultRepository.findByScriptId(scriptId);
+    }
+
 }

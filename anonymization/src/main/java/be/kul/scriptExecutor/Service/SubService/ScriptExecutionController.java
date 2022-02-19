@@ -26,6 +26,9 @@ public class ScriptExecutionController {
     private AnonymizationController anonymizationController;
 
     public ScriptAnonymizationResult executeSummary(ScriptSummary scriptSummary) {
+        //Get the script id
+        long scriptId = scriptSummary.getScriptId();
+
         //Extract the program tree from the summary
         ProgramExpression programTree = scriptSummary.getProgramTree();
 
@@ -42,13 +45,14 @@ public class ScriptExecutionController {
         Set<String> outputVariableNames = scriptSummary.getOutputVariableNames();
 
         //Generate the output
-        ScriptAnonymizationResult scriptAnonymizationResult = generateAnonymizationResult(outputVariableNames, variables);
+        ScriptAnonymizationResult scriptAnonymizationResult = generateAnonymizationResult(scriptId, outputVariableNames, variables);
 
         return scriptAnonymizationResult;
     }
 
-    private ScriptAnonymizationResult generateAnonymizationResult(Set<String> outputVariableNames, HashMap<String, DataContainer> variables) {
+    private ScriptAnonymizationResult generateAnonymizationResult(long scriptId, Set<String> outputVariableNames, HashMap<String, DataContainer> variables) {
         ScriptAnonymizationResult scriptAnonymizationResult = new ScriptAnonymizationResult();
+        scriptAnonymizationResult.setScriptId(scriptId);
 
         //Add the anonyimsed values to the result object
         for (String outputVariableName : outputVariableNames) {

@@ -15,5 +15,4 @@ public class AnonymizedDataSetData extends Data {
     @JsonProperty("anonymized_dataset")
     private List<HashMap<String, String>> anonymizedDataSet;
 
-
 }

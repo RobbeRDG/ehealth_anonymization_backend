@@ -48,6 +48,9 @@ public class UserAccessService {
         //Send the summary to the anonymization service
         amqpProducerController.sendAnonymizationRequest(scriptSummary);
 
+        //Logger
+        log.info("Handled new input script with id: " + scriptSummary.getScriptId());
+
         //Return the script summary
         return scriptSummary;
     }
@@ -56,5 +59,12 @@ public class UserAccessService {
     public void handleScriptExecutionResult(ScriptAnonymizationResult scriptAnonymizationResult) {
         //Save the script execution result to the database
         dataHandlerController.saveScriptExecutionResult(scriptAnonymizationResult);
+
+        //Logger
+        log.info("Received new script anonymization result for script with id: " + scriptAnonymizationResult.getScriptId());
+    }
+
+    public ScriptAnonymizationResult handleScriptAnonymizationResultRequest(long scriptId) {
+        return dataHandlerController.getScriptAnonymizationResult(scriptId);
     }
 }

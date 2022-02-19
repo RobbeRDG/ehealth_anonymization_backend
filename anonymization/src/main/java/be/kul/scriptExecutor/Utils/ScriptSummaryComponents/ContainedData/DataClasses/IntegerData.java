@@ -5,12 +5,15 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @JsonTypeName("integer_data")
 public class IntegerData extends Data {
     @JsonProperty("integer_value")
     private int integerValue;
+
+    public IntegerData(int integerValue) {
+        super();
+        this.integerValue = integerValue;
+    }
 
     public int getIntegerValue() {
         return integerValue;

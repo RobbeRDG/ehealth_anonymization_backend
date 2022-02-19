@@ -86,7 +86,7 @@ public class RabbitMQConfig {
     SimpleMessageListenerContainer consumerListenerContainer(ConnectionFactory connectionFactory, @Qualifier("consumerListenerAdapter") MessageListenerAdapter listenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueues(anonymizationRequestQueue(), anonymizationResultQueue());
+        container.setQueues(anonymizationRequestQueue());
         container.setMessageListener(listenerAdapter);
         return container;
     }

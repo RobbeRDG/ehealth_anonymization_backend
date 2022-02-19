@@ -2,6 +2,8 @@ package be.kul.useraccess.Utils.ScriptSummaryComponents.ContainedData.DataClasse
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import lombok.AllArgsConstructor;
+import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 
 @JsonTypeName("integer_data")
 public class IntegerData extends Data {
@@ -11,6 +13,10 @@ public class IntegerData extends Data {
     public IntegerData(int integerValue) {
         super();
         this.integerValue = integerValue;
+    }
+
+    public IntegerData() {
+        super();
     }
 
     public int getIntegerValue() {
