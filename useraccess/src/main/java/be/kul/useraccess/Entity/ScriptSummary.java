@@ -7,12 +7,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.Set;
 
 @Document("script_summaries")
 public class ScriptSummary {
+    @Transient
+    public static final String SEQUENCE_NAME = "script_summaries";
+
     @Id
     @JsonProperty("script_id")
     private long scriptId;
@@ -38,5 +43,9 @@ public class ScriptSummary {
 
     public long getScriptId() {
         return scriptId;
+    }
+
+    public void setScriptId(long scriptId) {
+        this.scriptId = scriptId;
     }
 }

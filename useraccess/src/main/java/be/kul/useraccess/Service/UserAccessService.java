@@ -44,7 +44,7 @@ public class UserAccessService {
         ScriptSummary scriptSummary = scriptParserController.generateScriptSummary(scriptString);
 
         //Save the generated script summary to the database
-        //scriptSummary = dataHandlerController.saveInputScriptSummary(scriptSummary);
+        scriptSummary = dataHandlerController.saveInputScriptSummary(scriptSummary);
 
         //Send the summary to the anonymization service
         amqpProducerController.sendAnonymizationRequest(scriptSummary);
