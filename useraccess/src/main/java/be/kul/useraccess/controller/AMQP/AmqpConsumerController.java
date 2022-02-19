@@ -1,6 +1,6 @@
 package be.kul.useraccess.controller.AMQP;
 
-import be.kul.useraccess.Entity.ScriptExecutionResult;
+import be.kul.useraccess.Entity.ScriptAnonymizationResult;
 import be.kul.useraccess.Service.UserAccessService;
 import be.kul.useraccess.Utils.AMQPConfiguration.RabbitMQConfig;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,9 +19,9 @@ public class AmqpConsumerController {
     @RabbitListener(queues = RabbitMQConfig.ANONYMIZATION_RESULT_QUEUE, containerFactory = "bridgeRabbitListenerContainerFactory")
     public void onAnonymizationResult(@Payload String scriptExecutionResultString) throws JsonProcessingException {
         //get the scriptExecutionResult form the string
-        ScriptExecutionResult scriptExecutionResult = objectMapper.readValue(scriptExecutionResultString, ScriptExecutionResult.class);
+        ScriptAnonymizationResult scriptAnonymizationResult = objectMapper.readValue(scriptExecutionResultString, ScriptAnonymizationResult.class);
 
         //Handle the script execution result
-        userAccessService.handleScriptExecutionResult(scriptExecutionResult);
+        userAccessService.handleScriptExecutionResult(scriptAnonymizationResult);
     }
 }

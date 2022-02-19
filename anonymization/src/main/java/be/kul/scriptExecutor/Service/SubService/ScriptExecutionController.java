@@ -1,7 +1,7 @@
 package be.kul.scriptExecutor.Service.SubService;
 
 
-import be.kul.scriptExecutor.Utils.ScriptExecutionResult.ScriptExecutionResult;
+import be.kul.scriptExecutor.Utils.ScriptAnonymizationResult.ScriptAnonymizationResult;
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataClasses.DataSetData;
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataContainer.DataContainer;
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ScriptSummary;
@@ -25,7 +25,7 @@ public class ScriptExecutionController {
     @Autowired
     private AnonymizationController anonymizationController;
 
-    public ResponseEntity<ScriptExecutionResult> executeSummary(ScriptSummary scriptSummary) {
+    public ScriptAnonymizationResult executeSummary(ScriptSummary scriptSummary) {
         //Extract the program tree from the summary
         ProgramExpression programTree = scriptSummary.getProgramTree();
 
@@ -42,16 +42,13 @@ public class ScriptExecutionController {
         Set<String> outputVariableNames = scriptSummary.getOutputVariableNames();
 
         //Generate the output
-        ScriptExecutionResult scriptExecutionResult = generateAnonymizationResult(outputVariableNames, variables);
+        ScriptAnonymizationResult scriptAnonymizationResult = generateAnonymizationResult(outputVariableNames, variables);
 
-        return new ResponseEntity<>(
-                scriptExecutionResult,
-                HttpStatus.OK
-        );
+        return scriptAnonymizationResult;
     }
 
-    private ScriptExecutionResult generateAnonymizationResult(Set<String> outputVariableNames, HashMap<String, DataContainer> variables) {
-        ScriptExecutionResult scriptExecutionResult = new ScriptExecutionResult();
+    private ScriptAnonymizationResult generateAnonymizationResult(Set<String> outputVariableNames, HashMap<String, DataContainer> variables) {
+        ScriptAnonymizationResult scriptAnonymizationResult = new ScriptAnonymizationResult();
 
         //Add the anonyimsed values to the result object
         for (String outputVariableName : outputVariableNames) {
@@ -64,10 +61,10 @@ public class ScriptExecutionController {
                 dataContainer = anonymizationController.anonymizeDataSet(dataContainer);
             }
 
-            scriptExecutionResult.addResultValue(outputVariableName, dataContainer);
+            scriptAnonymizationResult.addResultValue(outputVariableName, dataContainer);
         }
 
-        return scriptExecutionResult;
+        return scriptAnonymizationResult;
     }
 
     public DataContainer getDataSet(String query) {

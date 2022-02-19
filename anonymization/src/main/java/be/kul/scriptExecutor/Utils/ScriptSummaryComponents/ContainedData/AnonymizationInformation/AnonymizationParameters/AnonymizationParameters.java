@@ -1,6 +1,5 @@
 package be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.AnonymizationInformation.AnonymizationParameters;
 
-import be.kul.scriptExecutor.Utils.Components.ScriptExecution.Data.DataClasses.*;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 

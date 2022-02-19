@@ -1,13 +1,13 @@
-package be.kul.scriptExecutor.Utils.ScriptExecutionResult;
+package be.kul.scriptExecutor.Utils.ScriptAnonymizationResult;
 
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataContainer.DataContainer;
 
 import java.util.HashMap;
 
-public class ScriptExecutionResult {
+public class ScriptAnonymizationResult {
     private HashMap<String, DataContainer> results;
 
-    public ScriptExecutionResult() {
+    public ScriptAnonymizationResult() {
         results = new HashMap<>();
     }
 

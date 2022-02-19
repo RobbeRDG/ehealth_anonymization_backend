@@ -1,7 +1,7 @@
 package be.kul.scriptExecutor.Controller.AMQP;
 
 import be.kul.scriptExecutor.Utils.AMQPConfiguration.RabbitMQConfig;
-import be.kul.scriptExecutor.Utils.ScriptExecutionResult.ScriptExecutionResult;
+import be.kul.scriptExecutor.Utils.ScriptAnonymizationResult.ScriptAnonymizationResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -16,9 +16,9 @@ public class AmqpProducerController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public void sendAnonymizationResult(ScriptExecutionResult scriptExecutionResult) throws JsonProcessingException {
+    public void sendAnonymizationResult(ScriptAnonymizationResult scriptAnonymizationResult) throws JsonProcessingException {
         //Convert scriptSummary object to json
-        String scriptExecutionResultString = objectMapper.writeValueAsString(scriptExecutionResult);
+        String scriptExecutionResultString = objectMapper.writeValueAsString(scriptAnonymizationResult);
 
         //Send the script summary to the anonymization service
         template.convertAndSend(

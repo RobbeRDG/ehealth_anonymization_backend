@@ -8,16 +8,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.HashMap;
 
-@Document("script_execution_results")
-public class ScriptExecutionResult {
+@Document("script_anonymization_results")
+public class ScriptAnonymizationResult {
     @Transient
-    public static final String SEQUENCE_NAME = "script_execution_results";
+    public static final String SEQUENCE_NAME = "script_anonymization_results";
 
     @Id
     private Long scriptId;
     private HashMap<String, DataContainer> results;
 
-    public ScriptExecutionResult() {
+    public ScriptAnonymizationResult() {
         results = new HashMap<>();
     }
 

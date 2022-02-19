@@ -10,11 +10,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.hibernate.query.internal.NativeQueryImpl;
 import org.hibernate.transform.AliasToEntityMapResultTransformer;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,12 +35,12 @@ public class MedicalDataRepository{
 
     public DataContainer executeQueryResponse(String queryString) {
         //Set the query
-        Query query = entityManager.createNativeQuery(queryString);
-        NativeQueryImpl nativeQuery = (NativeQueryImpl) query;
+        Query query = entityManager.createNativeQuery(queryString)
+                .unwrap(org.hibernate.query.Query.class)
+                .setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE); //Is deprecated but no decent alternative for now
 
         //Execute the query
-        nativeQuery.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
-        List<Map<String,Object>> resultList = nativeQuery.getResultList();
+        List<Map<String,Object>> resultList = query.getResultList();
 
         List<HashMap<String,String>> dataSet = new ArrayList<>();
         for (Map<String, Object> result : resultList) {

@@ -16,7 +16,6 @@ public class AmqpConsumerController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @RabbitListener(queues = RabbitMQConfig.ANONYMIZATION_REQUEST_QUEUE, containerFactory = "bridgeRabbitListenerContainerFactory")
     public void onAnonymizationRequest(@Payload String scriptSummaryString) throws JsonProcessingException {
         //get the scriptExecutionResult form the string
         ScriptSummary scriptSummary = objectMapper.readValue(scriptSummaryString, ScriptSummary.class);

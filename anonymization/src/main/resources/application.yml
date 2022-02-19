@@ -1,5 +1,5 @@
 server:
-  port: 8090
+  port: 9002
 
 spring:
   application:
@@ -21,6 +21,6 @@ spring:
       schema: cmd
   rabbitmq:
     host: localhost
-    username: service
-    password: 5AJtgi9jb%y87TKr
+    username: guest
+    password: qyDB72wb%Y6HbjKt
     port: 5672

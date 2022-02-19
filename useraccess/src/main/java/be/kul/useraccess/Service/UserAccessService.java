@@ -1,13 +1,12 @@
 package be.kul.useraccess.Service;
 
-import be.kul.useraccess.Entity.ScriptExecutionResult;
+import be.kul.useraccess.Entity.ScriptAnonymizationResult;
 import be.kul.useraccess.Service.SubService.DataHandlerController;
 import be.kul.useraccess.Entity.ScriptSummary;
 import be.kul.useraccess.Service.SubService.ScriptParserController;
 import be.kul.useraccess.Utils.Exceptions.ExceptionClasses.ScriptFileToStringConversionException;
 import be.kul.useraccess.controller.AMQP.AmqpProducerController;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +29,7 @@ public class UserAccessService {
     @Autowired
     private DataHandlerController dataHandlerController;
 
-    public ResponseEntity<Long> handleScriptUpload(MultipartFile scriptFile) throws ScriptFileToStringConversionException, JsonProcessingException {
+    public ScriptSummary handleScriptUpload(MultipartFile scriptFile) throws ScriptFileToStringConversionException, JsonProcessingException {
         //Read the file input string
         String scriptString = "";
         try {
@@ -49,14 +48,13 @@ public class UserAccessService {
         //Send the summary to the anonymization service
         amqpProducerController.sendAnonymizationRequest(scriptSummary);
 
-        //Return the script id to the user
-        long scriptId = scriptSummary.getScriptId();
-        return new ResponseEntity<Long>(scriptId, HttpStatus.OK);
+        //Return the script summary
+        return scriptSummary;
     }
 
 
-    public void handleScriptExecutionResult(ScriptExecutionResult scriptExecutionResult) {
+    public void handleScriptExecutionResult(ScriptAnonymizationResult scriptAnonymizationResult) {
         //Save the script execution result to the database
-        dataHandlerController.saveScriptExecutionResult(scriptExecutionResult);
+        dataHandlerController.saveScriptExecutionResult(scriptAnonymizationResult);
     }
 }
