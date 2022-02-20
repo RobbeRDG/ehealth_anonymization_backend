@@ -1,19 +1,17 @@
 package be.kul.useraccess.Service.SubService;
 
-import be.kul.useraccess.Service.UserAccessService;
 import be.kul.useraccess.Utils.Antlr.impl.RScriptBaseVisitorImpl;
 import be.kul.useraccess.Utils.SupportedFunctions.FunctionFingerPrintScanner;
 import be.kul.useraccess.Entity.ScriptSummary;
 import be.kul.useraccess.Utils.Antlr.RScriptLexer;
 import be.kul.useraccess.Utils.Antlr.RScriptParser;
-import be.kul.useraccess.Utils.Exceptions.ScriptParsingException;
+import be.kul.useraccess.Utils.Exceptions.ExceptionClasses.ScriptParsingException;
 import be.kul.useraccess.Utils.SupportedFunctions.SupportedFunctionFingerPrint;
 import be.kul.useraccess.Utils.ScriptSummaryComponents.TreeExpressionNodes.ProgramExpression;
 import be.kul.useraccess.Utils.Enums.FunctionId;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;

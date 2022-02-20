@@ -14,10 +14,13 @@ public class ArxAnonymizer {
         ARXConfiguration configuration = ARXConfiguration.create();
 
         //Set the anonymization configuration
-        configuration.addPrivacyModel(new KAnonymity(3));
+        configuration.addPrivacyModel(new KAnonymity(11));
+        /*
         if (!data.getDefinition().getSensitiveAttributes().isEmpty()) {
             configuration.addPrivacyModel(new DistinctLDiversity("cause_concept_id", 2));
         }
+
+         */
 
         //Set the information loss metric
         configuration.setQualityModel(Metric.createEntropyMetric());

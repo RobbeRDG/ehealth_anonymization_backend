@@ -4,6 +4,7 @@ import be.kul.useraccess.Entity.ScriptAnonymizationResult;
 import be.kul.useraccess.Service.SubService.DataHandlerController;
 import be.kul.useraccess.Entity.ScriptSummary;
 import be.kul.useraccess.Service.SubService.ScriptParserController;
+import be.kul.useraccess.Utils.Exceptions.ExceptionClasses.ScriptAnonymizationResultNotFoundException;
 import be.kul.useraccess.Utils.Exceptions.ExceptionClasses.ScriptFileToStringConversionException;
 import be.kul.useraccess.controller.AMQP.AmqpProducerController;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,7 +37,7 @@ public class UserAccessService {
             scriptString = new String(scriptFile.getBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             log.warn("Something went wrong converting script file to string: " + e.getLocalizedMessage());
-            throw new ScriptFileToStringConversionException("Couldn't convert specified script file to string: " + e.getLocalizedMessage());
+            throw new ScriptFileToStringConversionException(e.getLocalizedMessage());
         }
 
         //Send the script string to the parser
@@ -65,6 +66,12 @@ public class UserAccessService {
     }
 
     public ScriptAnonymizationResult handleScriptAnonymizationResultRequest(long scriptId) {
-        return dataHandlerController.getScriptAnonymizationResult(scriptId);
+        ScriptAnonymizationResult scriptAnonymizationResult = dataHandlerController.getScriptAnonymizationResult(scriptId);
+
+        if (scriptAnonymizationResult == null) {
+            throw new ScriptAnonymizationResultNotFoundException("No anonymization result found for script with id: " + scriptId);
+        }
+
+        return scriptAnonymizationResult;
     }
 }

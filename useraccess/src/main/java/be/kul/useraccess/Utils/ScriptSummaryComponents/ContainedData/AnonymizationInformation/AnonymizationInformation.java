@@ -1,8 +1,7 @@
 package be.kul.useraccess.Utils.ScriptSummaryComponents.ContainedData.AnonymizationInformation;
 
-
-import be.kul.useraccess.Utils.ScriptSummaryComponents.ContainedData.AnonymizationInformation.AnonymizationParameters.AnonymizationParameters;
 import be.kul.useraccess.Utils.Enums.AnonymizationStatus;
+import be.kul.useraccess.Utils.ScriptSummaryComponents.ContainedData.AnonymizationInformation.AnonymizationParameters.AnonymizationParameters;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 

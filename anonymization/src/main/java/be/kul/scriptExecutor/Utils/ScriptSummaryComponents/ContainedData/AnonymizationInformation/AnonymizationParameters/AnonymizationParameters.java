@@ -10,4 +10,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value= DataSetAnonymizationParameters.class, name="dataset_anonymization_parameters"),
 })
 public abstract class AnonymizationParameters {
+    public AnonymizationParameters() {
+    }
 }

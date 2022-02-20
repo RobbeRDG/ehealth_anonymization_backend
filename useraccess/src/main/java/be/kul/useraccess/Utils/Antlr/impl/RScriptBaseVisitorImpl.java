@@ -1,13 +1,13 @@
 package be.kul.useraccess.Utils.Antlr.impl;
 
+import be.kul.useraccess.Utils.ScriptSummaryComponents.ContainedData.AnonymizationInformation.AnonymizationInformation;
 import be.kul.useraccess.Utils.ScriptSummaryComponents.ContainedData.DataClasses.*;
 import be.kul.useraccess.Utils.ScriptSummaryComponents.TreeExpressionNodes.*;
 import be.kul.useraccess.Utils.SupportedFunctions.FunctionFingerPrint;
 import be.kul.useraccess.Utils.Antlr.RScriptBaseVisitor;
 import be.kul.useraccess.Utils.Antlr.RScriptParser;
-import be.kul.useraccess.Utils.ScriptSummaryComponents.ContainedData.AnonymizationInformation.AnonymizationInformation;
 import be.kul.useraccess.Utils.ScriptSummaryComponents.ContainedData.DataContainer.DataContainer;
-import be.kul.useraccess.Utils.Exceptions.NotSupportedFunctionException;
+import be.kul.useraccess.Utils.Exceptions.ExceptionClasses.NotSupportedFunctionException;
 import be.kul.useraccess.Utils.SupportedFunctions.FunctionFingerPrintScanner;
 import be.kul.useraccess.Utils.Enums.FunctionId;
 import be.kul.useraccess.Utils.Enums.AtomExpressionType;

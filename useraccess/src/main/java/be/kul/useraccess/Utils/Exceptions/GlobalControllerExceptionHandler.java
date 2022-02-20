@@ -1,6 +1,8 @@
 package be.kul.useraccess.Utils.Exceptions;
 
+import be.kul.useraccess.Utils.Exceptions.ExceptionClasses.ScriptAnonymizationResultNotFoundException;
 import be.kul.useraccess.Utils.Exceptions.ExceptionClasses.ScriptFileToStringConversionException;
+import be.kul.useraccess.Utils.Exceptions.ExceptionClasses.ScriptParsingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,30 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
                 headers,
                 HttpStatus.BAD_REQUEST, request
             );
+    }
+
+    @ExceptionHandler(value = {
+            ScriptAnonymizationResultNotFoundException.class,
+    })
+    protected ResponseEntity<Object> handleNotFound(RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = ex.getLocalizedMessage();
+
+        //Create the error message
+        ErrorMessage errorMessage = new ErrorMessage(bodyOfResponse);
+
+        //Set the headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Exception-Type", String.valueOf(ex.getClass()));
+
+        log.warn("Global exception handler handled: " + ex.getLocalizedMessage());
+
+        return handleExceptionInternal(
+                ex,
+                errorMessage,
+                headers,
+                HttpStatus.NOT_FOUND,
+                request
+        );
     }
 
     @ExceptionHandler(value = {}) //Handle all unexpected exceptions

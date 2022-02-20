@@ -1,7 +1,7 @@
 package be.kul.useraccess.Utils.SupportedFunctions;
 
 import be.kul.useraccess.Utils.Enums.FunctionId;
-import be.kul.useraccess.Utils.Exceptions.NotSupportedFunctionException;
+import be.kul.useraccess.Utils.Exceptions.ExceptionClasses.NotSupportedFunctionException;
 
 import java.util.HashMap;
 

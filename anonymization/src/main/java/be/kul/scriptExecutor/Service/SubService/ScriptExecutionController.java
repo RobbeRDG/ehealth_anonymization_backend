@@ -10,8 +10,6 @@ import be.kul.scriptExecutor.Utils.TreeVisitor.TreeVisitor;
 import be.kul.scriptExecutor.Service.ScriptExecutorService;
 import be.kul.scriptExecutor.Utils.Enums.FunctionId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

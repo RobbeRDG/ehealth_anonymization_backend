@@ -1,12 +1,14 @@
 package be.kul.useraccess.Utils.ScriptSummaryComponents.TreeExpressionNodes;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.ArrayList;
 
 
-@JsonTypeName("programExpression")
+@JsonTypeName("program_expression")
 public class ProgramExpression extends Expression {
+    @JsonProperty("child_expressions")
     private ArrayList<Expression> childExpressions;
 
     public ProgramExpression() {

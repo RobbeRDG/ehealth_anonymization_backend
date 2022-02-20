@@ -2,7 +2,7 @@ package be.kul.useraccess.Service.SubService;
 
 import be.kul.useraccess.Entity.ScriptAnonymizationResult;
 import be.kul.useraccess.Entity.ScriptSummary;
-import be.kul.useraccess.Repository.ScriptExecutionResultRepository;
+import be.kul.useraccess.Repository.ScriptAnonymizationResultRepository;
 import be.kul.useraccess.Repository.ScriptSummaryRepository;
 import be.kul.useraccess.Utils.MongoDB.SequenceGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataHandlerController {
     @Autowired
-    ScriptExecutionResultRepository scriptExecutionResultRepository;
+    ScriptAnonymizationResultRepository scriptAnonymizationResultRepository;
 
     @Autowired
     SequenceGeneratorService sequenceGeneratorService;
@@ -20,7 +20,7 @@ public class DataHandlerController {
     ScriptSummaryRepository scriptSummaryRepository;
 
     public ScriptAnonymizationResult saveScriptExecutionResult(ScriptAnonymizationResult scriptAnonymizationResult) {
-        return scriptExecutionResultRepository.save(scriptAnonymizationResult);
+        return scriptAnonymizationResultRepository.save(scriptAnonymizationResult);
     }
 
     public ScriptSummary saveInputScriptSummary(ScriptSummary scriptSummary) {
@@ -31,7 +31,7 @@ public class DataHandlerController {
     }
 
     public ScriptAnonymizationResult getScriptAnonymizationResult(long scriptId) {
-        return scriptExecutionResultRepository.findByScriptId(scriptId);
+        return scriptAnonymizationResultRepository.findByScriptId(scriptId);
     }
 
 }

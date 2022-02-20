@@ -1,11 +1,15 @@
 package be.kul.scriptExecutor.Utils.ScriptSummaryComponents.TreeExpressionNodes;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 
-@JsonTypeName("assignmentExpression")
+@JsonTypeName("assignment_expression")
 public class AssignmentExpression extends Expression{
+    @JsonProperty("variable")
     private AtomExpression variable;
+
+    @JsonProperty("data")
     private Expression data;
 
     public AssignmentExpression(AtomExpression variable, Expression data) {

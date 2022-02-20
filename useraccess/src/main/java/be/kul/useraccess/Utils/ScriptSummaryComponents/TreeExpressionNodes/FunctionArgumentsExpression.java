@@ -1,12 +1,14 @@
 package be.kul.useraccess.Utils.ScriptSummaryComponents.TreeExpressionNodes;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.ArrayList;
 
 
-@JsonTypeName("functionArgumentsExpression")
+@JsonTypeName("function_arguments_expression")
 public class FunctionArgumentsExpression extends Expression {
+    @JsonProperty("function_arguments")
     private ArrayList<AtomExpression> functionArguments;
 
     public FunctionArgumentsExpression() {
