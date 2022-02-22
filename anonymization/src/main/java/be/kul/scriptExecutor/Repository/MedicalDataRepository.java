@@ -33,7 +33,7 @@ public class MedicalDataRepository{
                     true);
 
 
-    public DataContainer executeQueryResponse(String queryString) {
+    public List<HashMap<String,String>> executeQueryResponse(String queryString) {
         //Set the query
         Query query = entityManager.createNativeQuery(queryString)
                 .unwrap(org.hibernate.query.Query.class)
@@ -65,18 +65,7 @@ public class MedicalDataRepository{
             dataSet.add(data);
         }
 
-        //Build the dataset object
-        DataSetData dataSetData = new DataSetData(dataSet);
-
-        //Build the anonymization information
-        AnonymizationInformation anonymizationInformation = new AnonymizationInformation(AnonymizationStatus.UNANONYMIZED, null);
-
-        //Build the data container
-        DataContainer dataContainer = new DataContainer();
-        dataContainer.setAssignedData(dataSetData);
-        dataContainer.setAnonymizationInformation(anonymizationInformation);
-
-        return dataContainer;
+        return dataSet;
     }
 
 }

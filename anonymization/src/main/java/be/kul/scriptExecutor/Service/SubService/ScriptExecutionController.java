@@ -1,6 +1,7 @@
 package be.kul.scriptExecutor.Service.SubService;
 
 
+import be.kul.scriptExecutor.Entity.AnonymizedPersonInformation;
 import be.kul.scriptExecutor.Utils.ScriptAnonymizationResult.ScriptAnonymizationResult;
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataClasses.DataSetData;
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataContainer.DataContainer;
@@ -43,12 +44,13 @@ public class ScriptExecutionController {
         Set<String> outputVariableNames = scriptSummary.getOutputVariableNames();
 
         //Generate the output
-        ScriptAnonymizationResult scriptAnonymizationResult = generateAnonymizationResult(scriptId, outputVariableNames, variables);
+        String anonymizationLevelIdentifier = "6kAnonymity";
+        ScriptAnonymizationResult scriptAnonymizationResult = generateAnonymizationResult(scriptId, outputVariableNames, variables, anonymizationLevelIdentifier);
 
         return scriptAnonymizationResult;
     }
 
-    private ScriptAnonymizationResult generateAnonymizationResult(long scriptId, Set<String> outputVariableNames, HashMap<String, DataContainer> variables) {
+    private ScriptAnonymizationResult generateAnonymizationResult(long scriptId, Set<String> outputVariableNames, HashMap<String, DataContainer> variables, String anonymizationLevelIdentifier) {
         ScriptAnonymizationResult scriptAnonymizationResult = new ScriptAnonymizationResult();
         scriptAnonymizationResult.setScriptId(scriptId);
 
@@ -60,7 +62,7 @@ public class ScriptExecutionController {
             //If the output variable is a dataset it needs to be anonymised
             if (dataContainer.getAssignedData() instanceof DataSetData) {
                 //Anonymise the dataset
-                dataContainer = anonymizationController.anonymizeDataSet(dataContainer);
+                dataContainer = anonymizationController.anonymizeDataSet(dataContainer, anonymizationLevelIdentifier);
             }
 
             scriptAnonymizationResult.addResultValue(outputVariableName, dataContainer);
@@ -70,10 +72,14 @@ public class ScriptExecutionController {
     }
 
     public DataContainer getDataSet(String query) {
-        return scriptExecutorService.getDataSet(query);
+        return scriptExecutorService.getMedicalDataSet(query);
     }
 
     public DataContainer executeAnonymizedFunction(FunctionId functionId, List<DataContainer> arguments) {
         return anonymizationController.executeAnonymizedFunction(functionId, arguments);
+    }
+
+    public AnonymizedPersonInformation getAnonymizedPersonInformation(long personId) {
+        return scriptExecutorService.getAnonymizedPersonInformation(personId);
     }
 }

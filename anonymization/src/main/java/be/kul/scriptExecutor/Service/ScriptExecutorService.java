@@ -1,6 +1,8 @@
 package be.kul.scriptExecutor.Service;
 
 import be.kul.scriptExecutor.Controller.AMQP.AmqpProducerController;
+import be.kul.scriptExecutor.Entity.AnonymizedPersonInformation;
+import be.kul.scriptExecutor.Service.SubService.DataHandler;
 import be.kul.scriptExecutor.Utils.ScriptAnonymizationResult.ScriptAnonymizationResult;
 import be.kul.scriptExecutor.Repository.MedicalDataRepository;
 import be.kul.scriptExecutor.Service.SubService.ScriptExecutionController;
@@ -22,7 +24,7 @@ public class ScriptExecutorService {
     private ScriptExecutionController scriptExecutionController;
 
     @Autowired
-    private MedicalDataRepository medicalDataRepository;
+    private DataHandler dataHandler;
 
     @Autowired
     private AmqpProducerController amqpProducerController;
@@ -44,7 +46,11 @@ public class ScriptExecutorService {
         return scriptAnonymizationResult;
     }
 
-    public DataContainer getDataSet(String query) {
-        return medicalDataRepository.executeQueryResponse(query);
+    public DataContainer getMedicalDataSet(String query) {
+        return dataHandler.getMedicalDataSet(query);
+    }
+
+    public AnonymizedPersonInformation getAnonymizedPersonInformation(long personId) {
+        return dataHandler.getAnonymizedPersonInformation(personId);
     }
 }
