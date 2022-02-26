@@ -43,6 +43,8 @@ public class ScriptExecutorService {
             log.error("something went wrong processing the anonymization result for amqp: " + e.getMessage());
         }
 
+        log.info("Handled anonymization request with script id: " + scriptSummary.getScriptId());
+
         return scriptAnonymizationResult;
     }
 

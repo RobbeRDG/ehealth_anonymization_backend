@@ -56,12 +56,15 @@ public class DataContainerToArxGenerator {
                     columnInformation.get(columnName).getAttributeType()
             );
 
+            //TODO not needed now, maybe in future
             //Add the hierarchy
+            /*
             int columnIndex = handle.getColumnIndexOf(columnName);
             arxData.getDefinition().setHierarchy(
                     columnName,
                     columnInformation.get(columnName).getHierarchy(handle.getDistinctValues(columnIndex))
             );
+             */
         }
     }
 

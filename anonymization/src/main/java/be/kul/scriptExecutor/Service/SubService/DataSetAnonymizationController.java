@@ -12,6 +12,7 @@ import org.deidentifier.arx.ARXPopulationModel;
 import org.deidentifier.arx.Data.DefaultData;
 import org.deidentifier.arx.DataHandle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,11 +20,15 @@ import java.util.List;
 import java.util.Map;
 
 
+@Component
 public class DataSetAnonymizationController {
     private static final ARXPopulationModel population = ARXPopulationModel.create(ARXPopulationModel.Region.USA);
+    private DataHandler dataHandler;
 
     @Autowired
-    private AnonymizationController anonymizationController;
+    public DataSetAnonymizationController(DataHandler dataHandler) {
+        this.dataHandler = dataHandler;
+    }
 
     public DataContainer anonymizeDataSet(DataContainer dataSetContainer, String anonymizationLevelIdentifier) {
         //Replace person quasi identifiers with pre anonymised person information
@@ -39,6 +44,7 @@ public class DataSetAnonymizationController {
         } catch (IOException e) {
             throw new DataSetAnonymizationException("couldn't run the anonymization process");
         }
+
 
         //Convert the arx result into an anonymized dataset object
         DataContainer anonymizedDataSetContainer = ArxToDataContainerGenerator.generateDataSetData(dataHandle, population);
@@ -59,17 +65,17 @@ public class DataSetAnonymizationController {
             long personId = Long.parseLong(personRecord.get("person_id"));
 
             //Retrieve the anonymized person information
-            AnonymizedPersonInformation anonymizedPersonInformation = anonymizationController.getAnonymizedPersonInformation(personId);
+            AnonymizedPersonInformation anonymizedPersonInformation = dataHandler.getAnonymizedPersonInformation(personId);
 
             //For each attribute of the anonymised person information, replace the value
-            for (Map.Entry<String, HashMap<String,AnonymizedValue>> attribute : anonymizedPersonInformation.getAnonymizedAttributes().entrySet()) {
+            for (Map.Entry<String, HashMap<String,String>> attribute : anonymizedPersonInformation.getAnonymizedAttributes().entrySet()) {
                 //Get the attribute name
                 String attributeName = attribute.getKey();
 
                 //If the dataset record contains the personal attribute, replace the value with the anonymized one
                 if (personRecord.containsKey(attributeName)) {
                     //Get the anonymized attribute for the requested level
-                    String anonymizedAttribute = attribute.getValue().get(anonymizationLevelIdentifier).getAnonymizedValue();
+                    String anonymizedAttribute = attribute.getValue().get(anonymizationLevelIdentifier);
 
                     //replace attribute value
                     personRecord.put(attributeName, anonymizedAttribute);

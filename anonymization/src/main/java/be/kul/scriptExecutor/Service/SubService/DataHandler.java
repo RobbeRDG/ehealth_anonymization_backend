@@ -9,12 +9,13 @@ import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataCla
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataContainer.DataContainer;
 import org.apache.hadoop.util.hash.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 
-@Service
+@Component
 public class DataHandler {
     @Autowired
     private MedicalDataRepository medicalDataRepository;
@@ -48,7 +49,7 @@ public class DataHandler {
             String personKey = "anonymized_person_information:" + personId;
 
             //Find the person information with the key
-            AnonymizedPersonInformation anonymizedPersonInformation = anonymizedPersonRepository.findById(personKey).orElse(null);
+            AnonymizedPersonInformation anonymizedPersonInformation = anonymizedPersonRepository.findById(personKey);
 
             //Place in map
             anonymizedPersonInformationMap.put(personId,anonymizedPersonInformation);
@@ -59,8 +60,8 @@ public class DataHandler {
 
     public AnonymizedPersonInformation getAnonymizedPersonInformation(long personId) {
         //Set the person key string
-        String personKey = "anonymized_person_information:" + personId;
-
-        return anonymizedPersonRepository.findById(personKey).orElse(null);
+        String personKey = Long.toString(personId);
+        AnonymizedPersonInformation anonymizedPersonInformation = anonymizedPersonRepository.findById(personKey);
+        return anonymizedPersonRepository.findById(personKey);
     }
 }

@@ -13,9 +13,9 @@ public class ArxAnonymizer {
         //Create a configuration object
         ARXConfiguration configuration = ARXConfiguration.create();
 
-        /*
         //Set the anonymization configuration
-        configuration.addPrivacyModel(new KAnonymity(11));
+        configuration.addPrivacyModel(new KAnonymity(1));
+        /*
         if (!data.getDefinition().getSensitiveAttributes().isEmpty()) {
             configuration.addPrivacyModel(new DistinctLDiversity("cause_concept_id", 2));
         }

@@ -27,17 +27,5 @@ public class RestController {
         );
     }
 
-    @GetMapping("test/update-")
-    public ResponseEntity<ScriptAnonymizationResult> uploadAnonymizationSummary(
-            @RequestBody ScriptSummary scriptSummary
-    ) {
-        ScriptAnonymizationResult scriptAnonymizationResult = scriptExecutorService.handleAnonymizationRequest(scriptSummary);
-
-        return new ResponseEntity<>(
-                scriptAnonymizationResult,
-                HttpStatus.OK
-        );
-    }
-
 
 }

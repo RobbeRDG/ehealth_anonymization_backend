@@ -32,7 +32,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation group: 'org.springframework.data', name: 'spring-data-redis', version: '2.3.3.RELEASE'
+	implementation group: 'redis.clients', name: 'jedis', version: '3.3.0'
 }
 
 test {

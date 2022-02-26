@@ -1,12 +1,14 @@
-package be.kul.scriptExecutor.Utils.AnonymizedFunctions;
+package be.kul.scriptExecutor.Service.SubService;
 
 import be.kul.scriptExecutor.Utils.AnonymizedFunctions.Functions.CountNumberOfRows;
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataClasses.DataSetData;
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataContainer.DataContainer;
 import be.kul.scriptExecutor.Utils.Exceptions.AnonymizedFunctionException;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class AnonymisedFunctionsController {
 
     public DataContainer executeCountNumberOfRows(List<DataContainer> argumentsList) {
