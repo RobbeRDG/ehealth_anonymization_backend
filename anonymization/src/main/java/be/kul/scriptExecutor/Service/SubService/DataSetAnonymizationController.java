@@ -34,6 +34,8 @@ public class DataSetAnonymizationController {
         //Replace person quasi identifiers with pre anonymised person information
         dataSetContainer = filterQuasiAttributes(dataSetContainer,anonymizationLevelIdentifier);
 
+        //Get the column names
+
         //Prepare the dataset for arx
         DefaultData arxData = DataContainerToArxGenerator.generateArxDataSet(dataSetContainer);
 
