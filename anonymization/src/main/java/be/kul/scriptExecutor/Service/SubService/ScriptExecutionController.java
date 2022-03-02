@@ -2,8 +2,10 @@ package be.kul.scriptExecutor.Service.SubService;
 
 
 import be.kul.scriptExecutor.Entity.AnonymizedPersonInformation;
+import be.kul.scriptExecutor.Utils.Exceptions.DataSetAnonymizationException;
 import be.kul.scriptExecutor.Utils.ScriptAnonymizationResult.ScriptAnonymizationResult;
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataClasses.DataSetData;
+import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataClasses.ExceptionData;
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataContainer.DataContainer;
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ScriptSummary;
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.TreeExpressionNodes.ProgramExpression;
@@ -61,14 +63,35 @@ public class ScriptExecutionController {
 
             //If the output variable is a dataset it needs to be anonymised
             if (dataContainer.getAssignedData() instanceof DataSetData) {
-                //Anonymise the dataset
-                dataContainer = anonymizationController.anonymizeDataSet(dataContainer, anonymizationLevelIdentifier);
+                try {
+                    //Anonymise the dataset
+                    dataContainer = anonymizationController.anonymizeDataSet(dataContainer, anonymizationLevelIdentifier);
+                } catch (DataSetAnonymizationException e) {
+                    dataContainer = generateExceptionDataContainer(e);
+                }
             }
 
             scriptAnonymizationResult.addResultValue(outputVariableName, dataContainer);
         }
 
         return scriptAnonymizationResult;
+    }
+
+    private DataContainer generateExceptionDataContainer(DataSetAnonymizationException e) {
+        //create a datacontainer object
+        DataContainer dataContainer = new DataContainer();
+
+        //Create the assigned exception data object
+        ExceptionData exceptionData = new ExceptionData(
+                "DataSetAnonymizationException",
+                e.getMessage()
+        );
+
+        //add the assigned data and anonymization information to the container
+        dataContainer.setAssignedData(exceptionData);
+        dataContainer.setAnonymizationInformation(null);
+
+        return dataContainer;
     }
 
     public DataContainer getDataSet(String query) {

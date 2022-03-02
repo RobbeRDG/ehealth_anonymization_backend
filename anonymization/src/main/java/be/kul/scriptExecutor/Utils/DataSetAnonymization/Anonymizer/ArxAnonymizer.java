@@ -1,5 +1,6 @@
 package be.kul.scriptExecutor.Utils.DataSetAnonymization.Anonymizer;
 
+import be.kul.scriptExecutor.Utils.DataSetAnonymization.HelperObjects.ArxAnonymizationConfigurer;
 import be.kul.scriptExecutor.Utils.Exceptions.DataSetAnonymizationException;
 import org.deidentifier.arx.*;
 import org.deidentifier.arx.Data.DefaultData;
@@ -10,27 +11,20 @@ import org.deidentifier.arx.criteria.OrderedDistanceTCloseness;
 import org.deidentifier.arx.metric.Metric;
 
 import java.io.IOException;
+import java.util.Set;
 
 public class ArxAnonymizer {
     public static DataHandle anonymize(DefaultData data, ARXPopulationModel population) throws IOException {
         //Create a configuration object
         ARXConfiguration configuration = ARXConfiguration.create();
 
-        //Set the anonymization configuration
-        configuration.addPrivacyModel(new KAnonymity(1));
-
-        //Set the anonymization configuration for the sensitive attributes
-        if (!data.getDefinition().getSensitiveAttributes().isEmpty()) {
-            for (String sensitiveAttributeName : data.getDefinition().getSensitiveAttributes()) {
-                configuration.addPrivacyModel(new EqualDistanceTCloseness(sensitiveAttributeName, 1));
-            }
-        }
-
+        //Pass the configuration to the anonymization configurer
+        ArxAnonymizationConfigurer.configure(data, configuration);
 
         //Set the information loss metric
         configuration.setQualityModel(Metric.createEntropyMetric());
 
-        //Set the aonymizer
+        //Set the anonymizer
         ARXAnonymizer anonymizer = new ARXAnonymizer();
 
         //Execute the anonymization

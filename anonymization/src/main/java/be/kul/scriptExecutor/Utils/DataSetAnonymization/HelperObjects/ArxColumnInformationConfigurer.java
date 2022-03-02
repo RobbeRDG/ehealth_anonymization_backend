@@ -2,6 +2,7 @@ package be.kul.scriptExecutor.Utils.DataSetAnonymization.HelperObjects;
 
 import be.kul.scriptExecutor.Utils.Exceptions.DataSetAnonymizationException;
 import org.deidentifier.arx.*;
+import org.deidentifier.arx.aggregates.HierarchyBuilderDate;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +62,21 @@ public class ArxColumnInformationConfigurer {
                 attributeName,
                 AttributeType.SENSITIVE_ATTRIBUTE
         );
+
+        //Set the hierarchy
+        data.getDefinition().setHierarchy(
+                attributeName,
+                HierarchyBuilderDate.create(
+                        DataType.createDate("yyyy-MM-dd hh:mm:ss"),
+                        HierarchyBuilderDate.Granularity.MINUTE_HOUR_DAY_MONTH_YEAR,
+                        HierarchyBuilderDate.Granularity.HOUR_DAY_MONTH_YEAR,
+                        HierarchyBuilderDate.Granularity.DAY_MONTH_YEAR,
+                        HierarchyBuilderDate.Granularity.MONTH_YEAR,
+                        HierarchyBuilderDate.Granularity.YEAR,
+                        HierarchyBuilderDate.Granularity.DECADE,
+                        HierarchyBuilderDate.Granularity.CENTURY
+                )
+        );
     }
 
     private static void generateRaceConceptIdInformation(String attributeName, Data data) {
@@ -115,7 +131,7 @@ public class ArxColumnInformationConfigurer {
         //Set the attribute type
         data.getDefinition().setAttributeType(
                 attributeName,
-                AttributeType.QUASI_IDENTIFYING_ATTRIBUTE
+                AttributeType.IDENTIFYING_ATTRIBUTE
         );
     }
 }

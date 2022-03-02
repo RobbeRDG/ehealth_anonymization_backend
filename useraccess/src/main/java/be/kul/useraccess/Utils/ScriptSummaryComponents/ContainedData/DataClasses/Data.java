@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value= BooleanData.class, name="boolean_data"),
         @JsonSubTypes.Type(value= FloatData.class, name="float_data"),
         @JsonSubTypes.Type(value= AnonymizedDataSetData.class, name="anonymized_dataset_data"),
+        @JsonSubTypes.Type(value= ExceptionData.class, name="exception_data"),
 })
 public class Data {
     public Data() {

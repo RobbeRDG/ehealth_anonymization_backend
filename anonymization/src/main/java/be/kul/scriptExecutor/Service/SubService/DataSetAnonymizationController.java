@@ -44,7 +44,7 @@ public class DataSetAnonymizationController {
         try {
             dataHandle = ArxAnonymizer.anonymize(arxData, population);
         } catch (IOException e) {
-            throw new DataSetAnonymizationException("couldn't run the anonymization process");
+            throw new DataSetAnonymizationException("couldn't run the anonymization : IO exception");
         }
 
 
