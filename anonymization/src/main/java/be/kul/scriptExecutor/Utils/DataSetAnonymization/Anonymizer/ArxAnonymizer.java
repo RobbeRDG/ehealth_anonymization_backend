@@ -4,31 +4,30 @@ import be.kul.scriptExecutor.Utils.DataSetAnonymization.HelperObjects.ArxAnonymi
 import be.kul.scriptExecutor.Utils.Exceptions.DataSetAnonymizationException;
 import org.deidentifier.arx.*;
 import org.deidentifier.arx.Data.DefaultData;
-import org.deidentifier.arx.criteria.DistinctLDiversity;
-import org.deidentifier.arx.criteria.EqualDistanceTCloseness;
-import org.deidentifier.arx.criteria.KAnonymity;
-import org.deidentifier.arx.criteria.OrderedDistanceTCloseness;
+import org.deidentifier.arx.certificate.elements.ElementData;
+import org.deidentifier.arx.criteria.*;
 import org.deidentifier.arx.metric.Metric;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 public class ArxAnonymizer {
-    public static DataHandle anonymize(DefaultData data, ARXPopulationModel population) throws IOException {
+    public DataHandle anonymize(DataSubset researchDataSubset, Data researchData) throws IOException {
         //Create a configuration object
         ARXConfiguration configuration = ARXConfiguration.create();
 
         //Pass the configuration to the anonymization configurer
-        ArxAnonymizationConfigurer.configure(data, configuration);
+        ArxAnonymizationConfigurer.configure(researchDataSubset, configuration);
 
         //Set the information loss metric
-        configuration.setQualityModel(Metric.createEntropyMetric());
+        configuration.setQualityModel(Metric.createLossMetric());
 
         //Set the anonymizer
         ARXAnonymizer anonymizer = new ARXAnonymizer();
 
         //Execute the anonymization
-        ARXResult result = anonymizer.anonymize(data,configuration);
+        ARXResult result = anonymizer.anonymize(researchData,configuration);
 
         //Get a handle on the data
         DataHandle handle = result.getOutput();
@@ -39,5 +38,36 @@ public class ArxAnonymizer {
         );
 
         return handle;
+    }
+
+
+    public DataHandle anonymizeWithTestDelta(DataSubset researchSubset, DefaultData researchData, double delta) throws IOException {
+        //Create a configuration object
+        ARXConfiguration configuration = ARXConfiguration.create();
+
+        //Pass the configuration to the anonymization configurer
+        ArxAnonymizationConfigurer.configureWithTestDelta(researchSubset, configuration, 0, delta);
+
+        //Set the information loss metric
+        configuration.setQualityModel(Metric.createLossMetric());
+
+        //Set the anonymizer
+        ARXAnonymizer anonymizer = new ARXAnonymizer();
+
+        //Release the research data handle if needed
+        if (!researchData.getHandle().isReleased()) researchData.getHandle().release();
+
+        //Execute the anonymization
+        ARXResult result = anonymizer.anonymize(researchData,configuration);
+
+        //Get a handle on the data
+        DataHandle dataHandle = result.getOutput();
+
+        //throw error if arx couldn't find an appropriate anonymization
+        if (dataHandle == null) throw new DataSetAnonymizationException(
+                "No privacy preserving transformation could be executed"
+        );
+
+        return dataHandle;
     }
 }

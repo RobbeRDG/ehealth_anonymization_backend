@@ -1,7 +1,6 @@
 package be.kul.scriptExecutor.Service.SubService;
 
 import be.kul.scriptExecutor.Entity.AnonymizedPersonInformation;
-import be.kul.scriptExecutor.Utils.AnonymizedPersonInformationObjects.AnonymizedValue;
 import be.kul.scriptExecutor.Utils.DataSetAnonymization.Anonymizer.ArxAnonymizer;
 import be.kul.scriptExecutor.Utils.DataSetAnonymization.DataSetGenerators.DataContainerToArxGenerator;
 import be.kul.scriptExecutor.Utils.DataSetAnonymization.DataSetGenerators.ArxToDataContainerGenerator;
@@ -9,20 +8,24 @@ import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataCla
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataContainer.DataContainer;
 import be.kul.scriptExecutor.Utils.Exceptions.DataSetAnonymizationException;
 import org.deidentifier.arx.ARXPopulationModel;
+import org.deidentifier.arx.Data;
 import org.deidentifier.arx.Data.DefaultData;
 import org.deidentifier.arx.DataHandle;
+import org.deidentifier.arx.DataSubset;
+import org.deidentifier.arx.aggregates.StatisticsQuality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.charset.Charset;
+import java.util.*;
 
 
 @Component
 public class DataSetAnonymizationController {
-    private static final ARXPopulationModel population = ARXPopulationModel.create(ARXPopulationModel.Region.USA);
+    private static final ARXPopulationModel population = ARXPopulationModel.create(ARXPopulationModel.Region.FRANCE);
     private DataHandler dataHandler;
 
     @Autowired
@@ -31,18 +34,34 @@ public class DataSetAnonymizationController {
     }
 
     public DataContainer anonymizeDataSet(DataContainer dataSetContainer, String anonymizationLevelIdentifier) {
-        //Replace person quasi identifiers with pre anonymised person information
-        dataSetContainer = filterQuasiAttributes(dataSetContainer,anonymizationLevelIdentifier);
+        //Generate arx data from the selected dataset
+        DefaultData researchData = DataContainerToArxGenerator.generateArxDataSet((DataSetData) dataSetContainer.getAssignedData());
 
-        //Get the column names
+        //Test if the dataset can be anonymized
+        validateAnonymizationConstraints(researchData);
 
-        //Prepare the dataset for arx
-        DefaultData arxData = DataContainerToArxGenerator.generateArxDataSet(dataSetContainer);
+        //Get the column names of the research subset
+        List<String> QINames = new ArrayList<>();
+        QINames.addAll(researchData.getDefinition().getQuasiIdentifyingAttributes());
+        QINames.add("person_id");
+
+        //Get the population table dataset
+        String populationTableIdentifier = "population";
+        DataSetData populationTableDataSet = dataHandler.getPopulationTableDataSet(populationTableIdentifier);
+
+        //Generate arx data from the population table
+        DefaultData populationTable = DataContainerToArxGenerator.generateArxDataSet(populationTableDataSet, QINames);
+
+        //Create a subset using the population and the research data
+        DataSubset researchSubset = DataSubset.create(populationTable,researchData);
+
+        //Create a new Arx anonymizer
+        ArxAnonymizer arxAnonymizer = new ArxAnonymizer();
 
         //Run the anonymization in arx
         DataHandle dataHandle;
         try {
-            dataHandle = ArxAnonymizer.anonymize(arxData, population);
+            dataHandle = arxAnonymizer.anonymize(researchSubset, researchData);
         } catch (IOException e) {
             throw new DataSetAnonymizationException("couldn't run the anonymization : IO exception");
         }
@@ -52,6 +71,13 @@ public class DataSetAnonymizationController {
         DataContainer anonymizedDataSetContainer = ArxToDataContainerGenerator.generateDataSetData(dataHandle, population);
 
         return anonymizedDataSetContainer;
+    }
+
+    private void validateAnonymizationConstraints(DefaultData researchData) {
+        DataHandle dataHandle = researchData.getHandle();
+
+        //Test if the dataset only contains one entry per individual
+        //TODO
     }
 
     private DataContainer filterQuasiAttributes(DataContainer dataSetContainer, String anonymizationLevelIdentifier) {
@@ -86,5 +112,63 @@ public class DataSetAnonymizationController {
         }
 
         return dataSetContainer;
+    }
+
+    public String testDPresenceAnonymization(DataContainer researchDataContainer, double deltaStart, double deltaStop, double deltaStep) {
+        //Generate arx data from the selected dataset
+        DefaultData researchData = DataContainerToArxGenerator.generateArxDataSet((DataSetData) researchDataContainer.getAssignedData());
+
+        //Test if the dataset can be anonymized
+        validateAnonymizationConstraints(researchData);
+
+        //Get the column names of the research subset
+        List<String> QINames = new ArrayList<>();
+        QINames.addAll(researchData.getDefinition().getQuasiIdentifyingAttributes());
+        QINames.add("person_id");
+
+        //Get the population table dataset
+        String populationTableIdentifier = "population";
+        DataSetData populationTableDataSet = dataHandler.getPopulationTableDataSet(populationTableIdentifier);
+
+        //Generate arx data from the population table
+        DefaultData populationTable = DataContainerToArxGenerator.generateArxDataSet(populationTableDataSet, QINames);
+
+        //Create a subset using the population and the research data
+        DataSubset researchSubset = DataSubset.create(populationTable,researchData);
+
+        //Create the csv string
+        StringBuilder sb = new StringBuilder();
+        sb.append("SE;granularity;nonUniformEntropy");
+
+        //Run the anonymization in arx for each of the specified delta values
+        for (double delta = deltaStart; delta <= deltaStop; delta += deltaStep) {
+            //Create a new Arx anonymizer
+            ArxAnonymizer arxAnonymizer = new ArxAnonymizer();
+
+            //Run the anonymization
+            DataHandle dataHandle;
+            try {
+                dataHandle = arxAnonymizer.anonymizeWithTestDelta(researchSubset, researchData, delta);
+            } catch (IOException e) {
+                throw new DataSetAnonymizationException("couldn't run the anonymization : IO exception");
+            }
+
+            //Set the delta string
+            String deltaString = String.format(Locale.FRANCE, "%-10.4f", delta);
+
+            //Get the quality statistics
+            StatisticsQuality statisticsQuality = dataHandle.getStatistics().getQualityStatistics();
+
+            //Squared error
+            String SE = String.format(Locale.FRANCE, "%-10.4f", statisticsQuality.getAttributeLevelSquaredError().getArithmeticMean());
+            String granularity = String.format(Locale.FRANCE, "%-10.4f", statisticsQuality.getGranularity().getArithmeticMean());
+            String nonUniformEntropy = String.format(Locale.FRANCE, "%-10.4f", statisticsQuality.getNonUniformEntropy().getArithmeticMean());
+
+            dataHandle.release();
+
+            sb.append(deltaString).append(";").append(SE).append(granularity).append(nonUniformEntropy).append(System.getProperty("line.separator"));;
+        }
+
+        return sb.toString();
     }
 }

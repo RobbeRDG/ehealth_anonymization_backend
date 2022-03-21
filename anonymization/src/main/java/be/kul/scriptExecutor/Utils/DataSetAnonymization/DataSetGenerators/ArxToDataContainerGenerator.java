@@ -36,6 +36,8 @@ public class ArxToDataContainerGenerator {
     }
 
     private static DataSetAnonymizationParameters generateDataSetAnonymizationParameters(DataHandle dataHandle, ARXPopulationModel population) {
+        DataSetAnonymizationParameters dataSetAnonymizationParameters = new DataSetAnonymizationParameters();
+
         //Get the sample risks
         RiskModelSampleRisks sampleRisks = dataHandle.getRiskEstimator(population).getSampleBasedReidentificationRisk();
 
@@ -47,14 +49,29 @@ public class ArxToDataContainerGenerator {
         double numberOfAffectedByHighestRisk = sampleRisks.getNumRecordsAffectedByHighestRisk();
 
         //Set the risks
-        DataSetAnonymizationParameters dataSetAnonymizationParameters = new DataSetAnonymizationParameters();
         dataSetAnonymizationParameters.setReIdentificationRisk(averageReIdentificationRisk);
         dataSetAnonymizationParameters.setHighestRisk(highestRisk);
         dataSetAnonymizationParameters.setNumberOfAffectedByHighestRisk(numberOfAffectedByHighestRisk);
         dataSetAnonymizationParameters.setLowestRisk(lowestRisk);
         dataSetAnonymizationParameters.setNumberOfAffectedByLowestRisk(numberOfAffectedByLowestRisk);
 
+        //Get the number of suppressed records
+        int numberOfSuppressedRecords = calculateNumberOfSuppressedRecords(dataHandle);
+
+        //Set the suppression count
+        dataSetAnonymizationParameters.setSuppressionCount(numberOfSuppressedRecords);
+
         return dataSetAnonymizationParameters;
+    }
+
+    private static int calculateNumberOfSuppressedRecords(DataHandle dataHandle) {
+        int suppressedCount = 0;
+
+        for (int rowIndex = 0; rowIndex < dataHandle.getNumRows(); rowIndex++) {
+            if (dataHandle.isSuppressed(rowIndex)) suppressedCount++;
+        }
+
+        return suppressedCount;
     }
 
     private static List<HashMap<String, String>> generateDataSetMap(DataHandle dataHandle) {

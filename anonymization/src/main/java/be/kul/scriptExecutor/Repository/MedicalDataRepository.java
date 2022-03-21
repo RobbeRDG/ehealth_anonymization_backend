@@ -25,9 +25,8 @@ import java.util.Map;
 public class MedicalDataRepository{
     @PersistenceContext
     private EntityManager entityManager;
-
-    private ObjectMapper mapper = new ObjectMapper()
-            .setDateFormat(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"))
+    private final ObjectMapper mapper = new ObjectMapper()
+            .setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .configure(com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES,
                     true);

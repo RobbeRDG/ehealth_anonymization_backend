@@ -15,6 +15,8 @@ public class DataSetAnonymizationParameters extends AnonymizationParameters{
     private double highestRisk;
     @JsonProperty("number_of_affected_by_highest_risk")
     private double numberOfAffectedByHighestRisk;
+    @JsonProperty("suppression_count")
+    private double suppressionCount;
 
     public DataSetAnonymizationParameters() {
         super();
@@ -58,5 +60,13 @@ public class DataSetAnonymizationParameters extends AnonymizationParameters{
 
     public void setNumberOfAffectedByHighestRisk(double numberOfAffectedByHighestRisk) {
         this.numberOfAffectedByHighestRisk = numberOfAffectedByHighestRisk;
+    }
+
+    public double getSuppressionCount() {
+        return suppressionCount;
+    }
+
+    public void setSuppressionCount(double suppressionCount) {
+        this.suppressionCount = suppressionCount;
     }
 }

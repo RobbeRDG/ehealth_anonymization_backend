@@ -4,11 +4,14 @@ import be.kul.scriptExecutor.Utils.Exceptions.DataSetAnonymizationException;
 import org.deidentifier.arx.*;
 import org.deidentifier.arx.aggregates.HierarchyBuilderDate;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class ArxColumnInformationConfigurer {
-    public static void generateMap(List<String> attributeNames, Data data) {
+    public static void generateMap(List<String> attributeNames, Data data) throws IOException {
         //Add the information for each attribute to the map
        for (String attributeName : attributeNames) {
            switch (attributeName) {
@@ -24,19 +27,15 @@ public class ArxColumnInformationConfigurer {
                case "race_concept_id":
                    generateRaceConceptIdInformation(attributeName, data);
                    break;
-               case "death_datetime":
-                   generateDeathDateTimeInformation(attributeName, data);
-                   break;
-               case "cause_concept_id":
-                   generateCauseConceptIdInformation(attributeName, data);
-                   break;
                default:
                    throw new DataSetAnonymizationException("No anonymization configuration for attribute: " + attributeName);
            }
        }
     }
 
-    private static void generateCauseConceptIdInformation(String attributeName, Data data) {
+    private static void generateRaceConceptIdInformation(String attributeName, Data data) throws IOException {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
         //Set the datatype
         data.getDefinition().setDataType(
                 attributeName,
@@ -46,11 +45,21 @@ public class ArxColumnInformationConfigurer {
         //Set the attribute type
         data.getDefinition().setAttributeType(
                 attributeName,
-                AttributeType.SENSITIVE_ATTRIBUTE
+                AttributeType.QUASI_IDENTIFYING_ATTRIBUTE
+        );
+
+        //Set the hierarchy
+        data.getDefinition().setHierarchy(
+                attributeName,
+                AttributeType.Hierarchy.create(
+                        Objects.requireNonNull(classLoader.getResourceAsStream("ARX/hierarchies/race_concept_id_hierarchy.csv")),
+                        Charset.defaultCharset(),
+                        ','
+                )
         );
     }
 
-    private static void generateDeathDateTimeInformation(String attributeName, Data data) {
+    private static void generateBirthDateTimeInformation(String attributeName, Data data) {
         //Set the datatype
         data.getDefinition().setDataType(
                 attributeName,
@@ -60,7 +69,7 @@ public class ArxColumnInformationConfigurer {
         //Set the attribute type
         data.getDefinition().setAttributeType(
                 attributeName,
-                AttributeType.SENSITIVE_ATTRIBUTE
+                AttributeType.QUASI_IDENTIFYING_ATTRIBUTE
         );
 
         //Set the hierarchy
@@ -79,7 +88,9 @@ public class ArxColumnInformationConfigurer {
         );
     }
 
-    private static void generateRaceConceptIdInformation(String attributeName, Data data) {
+    private static void generateGenderConceptIdInformation(String attributeName, Data data) throws IOException {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
         //Set the datatype
         data.getDefinition().setDataType(
                 attributeName,
@@ -91,33 +102,15 @@ public class ArxColumnInformationConfigurer {
                 attributeName,
                 AttributeType.QUASI_IDENTIFYING_ATTRIBUTE
         );
-    }
 
-    private static void generateBirthDateTimeInformation(String attributeName, Data data) {
-        //Set the datatype
-        data.getDefinition().setDataType(
+        //Set the hierarchy
+        data.getDefinition().setHierarchy(
                 attributeName,
-                DataType.createDate("yyyy-MM-dd hh:mm:ss")
-        );
-
-        //Set the attribute type
-        data.getDefinition().setAttributeType(
-                attributeName,
-                AttributeType.QUASI_IDENTIFYING_ATTRIBUTE
-        );
-    }
-
-    private static void generateGenderConceptIdInformation(String attributeName, Data data) {
-        //Set the datatype
-        data.getDefinition().setDataType(
-                attributeName,
-                DataType.INTEGER
-        );
-
-        //Set the attribute type
-        data.getDefinition().setAttributeType(
-                attributeName,
-                AttributeType.QUASI_IDENTIFYING_ATTRIBUTE
+                AttributeType.Hierarchy.create(
+                        Objects.requireNonNull(classLoader.getResourceAsStream("ARX/hierarchies/gender_concept_id_hierarchy.csv")),
+                        Charset.defaultCharset(),
+                        ','
+                )
         );
     }
 

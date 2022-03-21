@@ -34,4 +34,8 @@ public class AnonymizationController {
     public DataContainer anonymizeDataSet(DataContainer dataSetContainer, String anonymizationLevelIdentifier) {
         return dataSetAnonymizationController.anonymizeDataSet(dataSetContainer,anonymizationLevelIdentifier);
     }
+
+    public String testDPresenceAnonymization(DataContainer researchDataContainer, double deltaStart, double deltaStop, double deltaStep) {
+        return dataSetAnonymizationController.testDPresenceAnonymization(researchDataContainer, deltaStart, deltaStop, deltaStep);
+    }
 }

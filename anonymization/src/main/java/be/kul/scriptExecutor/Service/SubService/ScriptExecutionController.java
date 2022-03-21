@@ -105,4 +105,11 @@ public class ScriptExecutionController {
     public AnonymizedPersonInformation getAnonymizedPersonInformation(long personId) {
         return scriptExecutorService.getAnonymizedPersonInformation(personId);
     }
+
+    public String testDPresenceAnonymization(String sqlQuery, double deltaStart, double deltaStop, double deltaStep) {
+        //Get the research dataset
+        DataContainer researchDataContainer = getDataSet(sqlQuery);
+
+        return anonymizationController.testDPresenceAnonymization(researchDataContainer, deltaStart, deltaStop, deltaStep);
+    }
 }
