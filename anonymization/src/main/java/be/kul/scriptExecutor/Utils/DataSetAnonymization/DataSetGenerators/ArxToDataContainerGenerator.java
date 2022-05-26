@@ -1,13 +1,13 @@
 package be.kul.scriptExecutor.Utils.DataSetAnonymization.DataSetGenerators;
 
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.AnonymizationInformation.AnonymizationParameters.DataSetAnonymizationParameters;
+import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataClasses.DataSetData;
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataContainer.DataContainer;
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.AnonymizationInformation.AnonymizationInformation;
-import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataClasses.AnonymizedDataSetData;
 import be.kul.scriptExecutor.Utils.Enums.AnonymizationStatus;
 import org.deidentifier.arx.ARXPopulationModel;
 import org.deidentifier.arx.DataHandle;
-import org.deidentifier.arx.risk.RiskModelSampleRisks;
+import org.deidentifier.arx.risk.RiskModelSampleSummary;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,8 +18,8 @@ public class ArxToDataContainerGenerator {
         //Convert arx dataset to hashmap
         List<HashMap<String,String>> dataSetMap = generateDataSetMap(dataHandle);
 
-        //Create an anonymized dataset object
-        AnonymizedDataSetData anonymizedDataSetData = new AnonymizedDataSetData(dataSetMap);
+        //Create a dataset object
+        DataSetData anonymizedDataSetData = new DataSetData(dataSetMap);
 
         //Get the anonymization parameters
         DataSetAnonymizationParameters parameters = generateDataSetAnonymizationParameters(dataHandle, population);
@@ -39,21 +39,15 @@ public class ArxToDataContainerGenerator {
         DataSetAnonymizationParameters dataSetAnonymizationParameters = new DataSetAnonymizationParameters();
 
         //Get the sample risks
-        RiskModelSampleRisks sampleRisks = dataHandle.getRiskEstimator(population).getSampleBasedReidentificationRisk();
+        RiskModelSampleSummary riskModelSampleSummary = dataHandle.getView().getRiskEstimator().getSampleBasedRiskSummary(0.1d);
 
         //From the sample risks extract the risks
-        double averageReIdentificationRisk = sampleRisks.getAverageRisk();
-        double lowestRisk = sampleRisks.getLowestRisk();
-        double numberOfAffectedByLowestRisk = sampleRisks.getNumRecordsAffectedByLowestRisk();
-        double highestRisk = sampleRisks.getHighestRisk();
-        double numberOfAffectedByHighestRisk = sampleRisks.getNumRecordsAffectedByHighestRisk();
+        double averageJournalistRisk = riskModelSampleSummary.getJournalistRisk().getAverageRisk();
+        double highestJournalistRisk = riskModelSampleSummary.getJournalistRisk().getHighestRisk();
 
         //Set the risks
-        dataSetAnonymizationParameters.setReIdentificationRisk(averageReIdentificationRisk);
-        dataSetAnonymizationParameters.setHighestRisk(highestRisk);
-        dataSetAnonymizationParameters.setNumberOfAffectedByHighestRisk(numberOfAffectedByHighestRisk);
-        dataSetAnonymizationParameters.setLowestRisk(lowestRisk);
-        dataSetAnonymizationParameters.setNumberOfAffectedByLowestRisk(numberOfAffectedByLowestRisk);
+        dataSetAnonymizationParameters.setAverageJournalistRisk(averageJournalistRisk);
+        dataSetAnonymizationParameters.setHighestJournalistRisk(highestJournalistRisk);
 
         //Get the number of suppressed records
         int numberOfSuppressedRecords = calculateNumberOfSuppressedRecords(dataHandle);

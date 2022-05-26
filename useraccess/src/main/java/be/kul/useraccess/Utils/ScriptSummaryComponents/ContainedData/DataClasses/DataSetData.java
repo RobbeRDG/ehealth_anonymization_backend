@@ -2,25 +2,27 @@ package be.kul.useraccess.Utils.ScriptSummaryComponents.ContainedData.DataClasse
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.List;
 
+@NoArgsConstructor
 @JsonTypeName("dataset_data")
 public class DataSetData extends Data {
-    @JsonProperty("unanonymized_dataset")
-    private List<HashMap<String, String>> unanonymizedDataSet;
+    @JsonProperty("dataset")
+    private List<HashMap<String, String>> dataset;
 
-    public DataSetData(List<HashMap<String,String>> unanonymizedDataSet) {
+    public DataSetData(List<HashMap<String,String>> dataset) {
         super();
-        this.unanonymizedDataSet = unanonymizedDataSet;
+        this.dataset = dataset;
     }
 
-    public List<HashMap<String, String>> getUnanonymizedDataSet() {
-        return unanonymizedDataSet;
+    public List<HashMap<String, String>> getDataset() {
+        return dataset;
     }
 
-    public void setUnanonymizedDataSet(List<HashMap<String, String>> unanonymizedDataSet) {
-        this.unanonymizedDataSet = unanonymizedDataSet;
+    public void setDataset(List<HashMap<String, String>> dataset) {
+        this.dataset = dataset;
     }
 }

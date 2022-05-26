@@ -31,11 +31,15 @@ public class AnonymizationController {
         );
     }
 
-    public DataContainer anonymizeDataSet(DataContainer dataSetContainer, String anonymizationLevelIdentifier) {
-        return dataSetAnonymizationController.anonymizeDataSet(dataSetContainer,anonymizationLevelIdentifier);
+    public DataContainer anonymizeDataSet(DataContainer researchDataContainer) {
+        return dataSetAnonymizationController.anonymizeDataSet(researchDataContainer);
     }
 
-    public String testDPresenceAnonymization(DataContainer researchDataContainer, double deltaStart, double deltaStop, double deltaStep) {
-        return dataSetAnonymizationController.testDPresenceAnonymization(researchDataContainer, deltaStart, deltaStop, deltaStep);
+    public String testDPresenceAnonymizationStats(DataContainer researchDataContainer, double deltaStart, double deltaStop, double deltaStep) {
+        return dataSetAnonymizationController.testDPresenceAnonymizationStats(researchDataContainer, deltaStart, deltaStop, deltaStep);
+    }
+
+    public DataContainer testDPresenceAnonymization(DataContainer researchDataContainer, double delta) {
+        return dataSetAnonymizationController.testDPresenceAnonymization(researchDataContainer, delta);
     }
 }

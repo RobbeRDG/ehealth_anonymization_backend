@@ -23,7 +23,7 @@ public class AnonymisedFunctionsController {
         }
 
         //Make a new function
-        CountNumberOfRows countNumberOfRows = new CountNumberOfRows(dataSetData.getUnanonymizedDataSet());
+        CountNumberOfRows countNumberOfRows = new CountNumberOfRows(dataSetData.getDataset());
 
         //Execute function
         return countNumberOfRows.solve();

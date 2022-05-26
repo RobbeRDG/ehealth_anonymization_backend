@@ -2,7 +2,6 @@ package be.kul.scriptExecutor.Utils.DataSetAnonymization.DataSetGenerators;
 import be.kul.scriptExecutor.Utils.DataSetAnonymization.HelperObjects.ArxColumnInformationConfigurer;
 import be.kul.scriptExecutor.Utils.Exceptions.DataSetAnonymizationException;
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataClasses.DataSetData;
-import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataContainer.DataContainer;
 import org.deidentifier.arx.Data;
 
 import java.io.IOException;
@@ -12,9 +11,9 @@ import java.util.List;
 
 
 public class DataContainerToArxGenerator {
-    public static Data.DefaultData generateArxDataSet(DataSetData dataSetData) {
+    public static Data.DefaultData generateArxDataSet(DataSetData dataSetData, boolean setAttributeInformation) {
         //Get the unanonymized dataset
-        List<HashMap<String, String>> unanonymizedDataSet = dataSetData.getUnanonymizedDataSet();
+        List<HashMap<String, String>> unanonymizedDataSet = dataSetData.getDataset();
 
         //Get the column names
         List<String> columnNames = getColumnNames(unanonymizedDataSet);
@@ -22,19 +21,22 @@ public class DataContainerToArxGenerator {
         //Build the arx data object
         Data.DefaultData arxData = addDataToArxDataSet(columnNames, unanonymizedDataSet);
 
-        //Initialize the attribute information in the datahandle
-        try {
-            ArxColumnInformationConfigurer.generateMap(columnNames, arxData);
-        } catch (IOException e) {
-            throw new DataSetAnonymizationException("Fault with initialisation of attribute information");
+        //Initialize the attribute information if requested
+        if (setAttributeInformation) {
+            try {
+                //Use only the filter column names to build the dataset
+                ArxColumnInformationConfigurer.generateMap(columnNames, arxData);
+            } catch (IOException e) {
+                throw new DataSetAnonymizationException("Fault with initialisation of attribute information");
+            }
         }
 
         return arxData;
     }
 
-    public static Data.DefaultData generateArxDataSet(DataSetData dataSetData, List<String> filterColumnNames) {
+    public static Data.DefaultData generateArxDataSet(DataSetData dataSetData, List<String> filterColumnNames, boolean setAttributeInformation) {
         //Get the unanonymized dataset
-        List<HashMap<String, String>> unanonymizedDataSet = dataSetData.getUnanonymizedDataSet();
+        List<HashMap<String, String>> unanonymizedDataSet = dataSetData.getDataset();
 
         //Get the column names
         List<String> columnNames = getColumnNames(unanonymizedDataSet);
@@ -47,12 +49,14 @@ public class DataContainerToArxGenerator {
         //Build the arx data object
         Data.DefaultData arxData = addDataToArxDataSet(filterColumnNames, unanonymizedDataSet);
 
-        //Initialize the attribute information in the datahandle
-        try {
-            //Use only the filter column names to build the dataset
-            ArxColumnInformationConfigurer.generateMap(filterColumnNames, arxData);
-        } catch (IOException e) {
-            throw new DataSetAnonymizationException("Fault with initialisation of attribute information");
+        //Initialize the attribute information if requested
+        if (setAttributeInformation) {
+            try {
+                //Use only the filter column names to build the dataset
+                ArxColumnInformationConfigurer.generateMap(filterColumnNames, arxData);
+            } catch (IOException e) {
+                throw new DataSetAnonymizationException("Fault with initialisation of attribute information");
+            }
         }
 
         return arxData;

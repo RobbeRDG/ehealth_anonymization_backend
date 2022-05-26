@@ -5,68 +5,34 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("dataset_anonymization_parameters")
 public class DataSetAnonymizationParameters extends AnonymizationParameters{
-    @JsonProperty("average_reidentification_risk")
-    private double reIdentificationRisk;
-    @JsonProperty("lowest_risk")
-    private double lowestRisk;
-    @JsonProperty("number_of_affected_by_lowest_risk")
-    private double numberOfAffectedByLowestRisk;
-    @JsonProperty("highest_risk")
-    private double highestRisk;
-    @JsonProperty("number_of_affected_by_highest_risk")
-    private double numberOfAffectedByHighestRisk;
+    @JsonProperty("average_journalist_risk")
+    private double averageJournalistRisk;
+    @JsonProperty("highest_journalist_risk")
+    private double highestJournalistRisk;
     @JsonProperty("suppression_count")
-    private double suppressionCount;
+    private int suppressionCount;
 
-    public DataSetAnonymizationParameters() {
-        super();
+    public double getAverageJournalistRisk() {
+        return averageJournalistRisk;
     }
 
-    public double getReIdentificationRisk() {
-        return reIdentificationRisk;
+    public void setAverageJournalistRisk(double averageJournalistRisk) {
+        this.averageJournalistRisk = averageJournalistRisk;
     }
 
-    public void setReIdentificationRisk(double reIdentificationRisk) {
-        this.reIdentificationRisk = reIdentificationRisk;
+    public double getHighestJournalistRisk() {
+        return highestJournalistRisk;
     }
 
-    public double getLowestRisk() {
-        return lowestRisk;
+    public void setHighestJournalistRisk(double highestJournalistRisk) {
+        this.highestJournalistRisk = highestJournalistRisk;
     }
 
-    public void setLowestRisk(double lowestRisk) {
-        this.lowestRisk = lowestRisk;
-    }
-
-    public double getNumberOfAffectedByLowestRisk() {
-        return numberOfAffectedByLowestRisk;
-    }
-
-    public void setNumberOfAffectedByLowestRisk(double numberOfAffectedByLowestRisk) {
-        this.numberOfAffectedByLowestRisk = numberOfAffectedByLowestRisk;
-    }
-
-    public double getHighestRisk() {
-        return highestRisk;
-    }
-
-    public void setHighestRisk(double highestRisk) {
-        this.highestRisk = highestRisk;
-    }
-
-    public double getNumberOfAffectedByHighestRisk() {
-        return numberOfAffectedByHighestRisk;
-    }
-
-    public void setNumberOfAffectedByHighestRisk(double numberOfAffectedByHighestRisk) {
-        this.numberOfAffectedByHighestRisk = numberOfAffectedByHighestRisk;
-    }
-
-    public double getSuppressionCount() {
+    public int getSuppressionCount() {
         return suppressionCount;
     }
 
-    public void setSuppressionCount(double suppressionCount) {
+    public void setSuppressionCount(int suppressionCount) {
         this.suppressionCount = suppressionCount;
     }
 }

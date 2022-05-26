@@ -46,13 +46,12 @@ public class ScriptExecutionController {
         Set<String> outputVariableNames = scriptSummary.getOutputVariableNames();
 
         //Generate the output
-        String anonymizationLevelIdentifier = "6kAnonymity";
-        ScriptAnonymizationResult scriptAnonymizationResult = generateAnonymizationResult(scriptId, outputVariableNames, variables, anonymizationLevelIdentifier);
+        ScriptAnonymizationResult scriptAnonymizationResult = generateAnonymizationResult(scriptId, outputVariableNames, variables);
 
         return scriptAnonymizationResult;
     }
 
-    private ScriptAnonymizationResult generateAnonymizationResult(long scriptId, Set<String> outputVariableNames, HashMap<String, DataContainer> variables, String anonymizationLevelIdentifier) {
+    private ScriptAnonymizationResult generateAnonymizationResult(long scriptId, Set<String> outputVariableNames, HashMap<String, DataContainer> variables) {
         ScriptAnonymizationResult scriptAnonymizationResult = new ScriptAnonymizationResult();
         scriptAnonymizationResult.setScriptId(scriptId);
 
@@ -65,7 +64,7 @@ public class ScriptExecutionController {
             if (dataContainer.getAssignedData() instanceof DataSetData) {
                 try {
                     //Anonymise the dataset
-                    dataContainer = anonymizationController.anonymizeDataSet(dataContainer, anonymizationLevelIdentifier);
+                    dataContainer = anonymizationController.anonymizeDataSet(dataContainer);
                 } catch (DataSetAnonymizationException e) {
                     dataContainer = generateExceptionDataContainer(e);
                 }
@@ -95,6 +94,7 @@ public class ScriptExecutionController {
     }
 
     public DataContainer getDataSet(String query) {
+        //TODO add sql parser here to check query
         return scriptExecutorService.getMedicalDataSet(query);
     }
 
@@ -102,14 +102,18 @@ public class ScriptExecutionController {
         return anonymizationController.executeAnonymizedFunction(functionId, arguments);
     }
 
-    public AnonymizedPersonInformation getAnonymizedPersonInformation(long personId) {
-        return scriptExecutorService.getAnonymizedPersonInformation(personId);
-    }
 
-    public String testDPresenceAnonymization(String sqlQuery, double deltaStart, double deltaStop, double deltaStep) {
+    public String testDPresenceAnonymizationStats(String sqlQuery, double deltaStart, double deltaStop, double deltaStep) {
         //Get the research dataset
         DataContainer researchDataContainer = getDataSet(sqlQuery);
 
-        return anonymizationController.testDPresenceAnonymization(researchDataContainer, deltaStart, deltaStop, deltaStep);
+        return anonymizationController.testDPresenceAnonymizationStats(researchDataContainer, deltaStart, deltaStop, deltaStep);
+    }
+
+    public DataContainer testDPresenceAnonymization(String sqlQuery, double delta) {
+        //Get the research dataset
+        DataContainer researchDataContainer = getDataSet(sqlQuery);
+
+        return anonymizationController.testDPresenceAnonymization(researchDataContainer, delta);
     }
 }

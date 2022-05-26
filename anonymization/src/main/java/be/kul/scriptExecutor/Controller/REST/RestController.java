@@ -2,6 +2,7 @@ package be.kul.scriptExecutor.Controller.REST;
 
 import be.kul.scriptExecutor.Utils.ScriptAnonymizationResult.ScriptAnonymizationResult;
 import be.kul.scriptExecutor.Service.ScriptExecutorService;
+import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ContainedData.DataContainer.DataContainer;
 import be.kul.scriptExecutor.Utils.ScriptSummaryComponents.ScriptSummary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
@@ -29,7 +29,7 @@ public class RestController {
         );
     }
 
-    @GetMapping("test/anonymize/sql")
+    @GetMapping("test/anonymize/sql/statistics")
     public ResponseEntity<String> uploadAnonymizationSummary(
             @RequestParam("sql") String sqlQuery,
             @RequestParam("deltaStart") String deltaStartString,
@@ -40,10 +40,25 @@ public class RestController {
         double deltaStop = Double.parseDouble(deltaStopString);
         double deltaStep = Double.parseDouble(deltaStepString);
 
-        String result = scriptExecutorService.testDPresenceAnonymization(sqlQuery,deltaStart,deltaStop,deltaStep);
+        String result = scriptExecutorService.testDPresenceAnonymizationStats(sqlQuery,deltaStart,deltaStop,deltaStep);
 
         return new ResponseEntity<>(
                 result,
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("test/anonymize/sql")
+    public ResponseEntity<DataContainer> uploadAnonymizationSummary(
+            @RequestParam("sql") String sqlQuery,
+            @RequestParam("delta") String deltaString
+    ) {
+        double delta = Double.parseDouble(deltaString);
+
+        DataContainer scriptAnonymizationResult = scriptExecutorService.testDPresenceAnonymization(sqlQuery,delta);
+
+        return new ResponseEntity<>(
+                scriptAnonymizationResult,
                 HttpStatus.OK
         );
     }

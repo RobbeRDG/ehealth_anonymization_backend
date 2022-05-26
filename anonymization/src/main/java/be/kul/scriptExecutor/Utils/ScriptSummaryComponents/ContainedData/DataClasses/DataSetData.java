@@ -10,18 +10,18 @@ import java.util.List;
 @NoArgsConstructor
 @JsonTypeName("dataset_data")
 public class DataSetData extends Data {
-    @JsonProperty("unanonymized_dataset")
-    private List<HashMap<String, String>> unanonymizedDataSet;
+    @JsonProperty("dataset")
+    private List<HashMap<String, String>> dataset;
 
-    public DataSetData(List<HashMap<String, String>> unanonymizedDataSet) {
-        this.unanonymizedDataSet = unanonymizedDataSet;
+    public DataSetData(List<HashMap<String, String>> dataset) {
+        this.dataset = dataset;
     }
 
-    public List<HashMap<String, String>> getUnanonymizedDataSet() {
-        return unanonymizedDataSet;
+    public List<HashMap<String, String>> getDataset() {
+        return dataset;
     }
 
-    public void setUnanonymizedDataSet(List<HashMap<String, String>> unanonymizedDataSet) {
-        this.unanonymizedDataSet = unanonymizedDataSet;
+    public void setDataset(List<HashMap<String, String>> dataset) {
+        this.dataset = dataset;
     }
 }
